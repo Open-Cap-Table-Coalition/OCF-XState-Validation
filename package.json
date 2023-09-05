@@ -2,7 +2,7 @@
   "name": "OCF-XState-Validation",
   "version": "0.0.1",
   "description": "xState-based validation tool for OCF files",
-  "main": "index.js",
+  "main": "index.mjs",
   "repository": "https://github.com/Open-Cap-Table-Coalition/OCF-XState-Validation",
   "author": "Arthur Guest",
   "license": "MIT",
