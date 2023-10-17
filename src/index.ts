@@ -1,15 +1,10 @@
 import * as xstate from 'xstate';
 import constants from './constants/constants';
-import validators from './validators';
 import ocfMachine from './ocfMachine';
 
-import {
-  manifest,
-  stakeholders,
-  stockClasses,
-  transactions,
-} from './test_data/data';
+import {transactions} from './test_data/data';
 
+// Sort the transactions in the file by date and then object type. The idea is that the transactions should be processed based on their date and for any given day, the issuance transactions are processed first so the machine can easily reference them in the current state.
 const transaction_types = constants.transaction_types;
 
 const sorted_transactions = transactions.items.sort(
@@ -37,7 +32,9 @@ promiseService.start();
 
 let currentDate: any = null;
 
+// For the sorted transactions, we run through the set of transactions for a given day and then at the end of the day (EOD), we run the EOD action before moving onto the next day in the record.
 sorted_transactions.forEach((ele: any) => {
+  // First determine if the date has changed. If it has, then we run the EOD action and then move onto the next day.
   if (ele.date !== currentDate) {
     if (currentDate === null) {
       console.log('Start transaction validation...');
