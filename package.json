@@ -1,11 +1,28 @@
 {
-  "name": "OCF-XState-Validation",
-  "version": "0.0.1",
-  "description": "xState-based validation tool for OCF files",
-  "main": "index.mjs",
-  "repository": "https://github.com/Open-Cap-Table-Coalition/OCF-XState-Validation",
-  "author": "Arthur Guest",
-  "license": "MIT",
+  "name": "ocf-validator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "node --loader ts-node/esm src/index.ts",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "gts lint",
+    "clean": "gts clean",
+    "compile": "tsc",
+    "fix": "gts fix",
+    "prepare": "npm run compile",
+    "pretest": "npm run compile",
+    "posttest": "npm run lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "20.8.2",
+    "gts": "^5.2.0",
+    "ts-node": "^10.9.1",
+    "typescript": "~5.2.0"
+  },
   "dependencies": {
     "fs": "^0.0.1-security",
     "xstate": "^4.38.2"
