@@ -2,7 +2,7 @@
   "ocf_version": "1.1.1-alpha+main",
   "file_type": "OCF_MANIFEST_FILE",
   "issuer": {
-    "id": "649d022c0343bc0007c20536",
+    "id": "acmeHoldingLimited",
     "comments": [],
     "object_type": "ISSUER",
     "legal_name": "Acme Holdings Limited",

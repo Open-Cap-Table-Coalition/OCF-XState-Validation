@@ -2,7 +2,7 @@
   "file_type": "OCF_STOCK_CLASSES_FILE",
   "items": [
     {
-      "id": "649d23b80343bc0007c2507e",
+      "id": "ordinaryA",
       "object_type": "STOCK_CLASS",
       "name": "Ordinary A",
       "class_type": "PREFERRED",
@@ -12,7 +12,7 @@
       "seniority": "1"
     },
     {
-      "id": "649d23c30343bc0007c250cc",
+      "id": "ordinaryB",
       "object_type": "STOCK_CLASS",
       "name": "Ordinary B",
       "class_type": "COMMON",
@@ -22,7 +22,7 @@
       "seniority": "1"
     },
     {
-      "id": "649d23df0343bc0007c25122",
+      "id": "preferred",
       "object_type": "STOCK_CLASS",
       "name": "Preferred",
       "class_type": "PREFERRED",

@@ -13,15 +13,11 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_issuance,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_ISSUANCE ${event.data.id} is valid`);
               context.stockIssuances.push(event.data);
             },
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(`Error validating ${event.data.security_id}`);
-            },
           },
         ],
         TX_STOCK_TRANSFER: [
@@ -29,7 +25,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_transfer,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_TRANSFER ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -39,11 +34,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_CANCELLATION: [
@@ -51,7 +41,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_cancellation,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_CANCELLATION ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -61,11 +50,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_RETRACTION: [
@@ -73,7 +57,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_retraction,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_RETRACTION ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -83,11 +66,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_ACCEPTANCE: [
@@ -95,7 +73,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_acceptance,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_ACCEPTANCE ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -105,11 +82,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_REISSUANCE: [
@@ -117,7 +89,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_reissuance,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_REISSUANCE ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -127,11 +98,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_CONVERSION: [
@@ -139,7 +105,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_conversion,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_CONVERSION ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -149,11 +114,6 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         TX_STOCK_REPURCHASE: [
@@ -161,7 +121,6 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_repurchase,
             actions: (context: any, event: any) => {
-              console.log(`TX_STOCK_REPURCHASE ${event.data.id} is valid`);
               context.stockIssuances = context.stockIssuances.filter(
                 (obj: any) => {
                   return obj.security_id !== event.data.security_id;
@@ -171,18 +130,25 @@ const ocfMachine: any = {
           },
           {
             target: 'validationError',
-            actions: (context: any, event: any) => {
-              console.log(
-                `Error validating ${event.data.object_type} with id: ${event.data.id}`
-              );
-            },
           },
         ],
         RUN_EOD: {
           taget: 'capTable',
           actions: (context: any, event: any) => {
-            console.log(`Cap table as of end of day on ${event.date}:`);
-            console.log(context.stockIssuances);
+            console.log(
+              `\x1b[0m\nThe cap table as of the end of day on ${event.date}:\x1b[0m`
+            );
+            const table: any[] = [];
+            context.stockIssuances.forEach((issuance: any) => {
+              table.push({
+                'Equity type': 'Stock',
+                'Custom ID': issuance.custom_id,
+                'Equity holder': issuance.stakeholder_id,
+                'Stock class': issuance.stock_class_id,
+                Quantity: issuance.quantity,
+              });
+            });
+            console.table(table);
           },
         },
       },
