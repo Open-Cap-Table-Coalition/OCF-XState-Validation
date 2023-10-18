@@ -25,6 +25,10 @@
   },
   "dependencies": {
     "fs": "^0.0.1-security",
+    "log-symbols": "^5.1.0",
     "xstate": "^4.38.2"
+  },
+  "engines": {
+    "node": ">=18.0.0 "
   }
 }
