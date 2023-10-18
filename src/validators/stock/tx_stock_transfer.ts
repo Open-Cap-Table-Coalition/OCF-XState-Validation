@@ -10,8 +10,8 @@ import {transactions} from '../../test_data/data';
     5. Is the date of transaction the same as all of the resulting issuances?
     6. If there is a balance issuance, does the balance security_id referenced by transaction exist in current cap table state?
     7. If there is a balance issuance, is the date of transaction the same day as the date of the balance issuance?
-    8. Does the sum of the quantities of the resulting issuance (and the balance issuance if it exists) equal to the quantity of the transfer?
-
+    8. Does the sum of the quantities of the resulting issuances equal to the quantity of the transfer?
+    9. Does the sum of the quantities of the resulting issuances (and the balance issuance if it exists) equal the quantity of the incoming issuance?
 */
 
 const valid_tx_stock_transfer = (context: any, event: any) => {
