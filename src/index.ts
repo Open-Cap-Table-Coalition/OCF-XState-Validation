@@ -74,6 +74,9 @@ for (let i = 0; i < sorted_transactions.length; i++) {
     } else if (ele.object_type === 'TX_STOCK_RETRACTION') {
       promiseService.send({type: 'TX_STOCK_RETRACTION', data: ele});
     } else if (ele.object_type === 'TX_STOCK_ACCEPTANCE') {
+      console.log(
+        `\x1b[93m\nAnalyzing stock acceptance with id: ${ele.id}.\x1b[0m`
+      );
       promiseService.send({type: 'TX_STOCK_ACCEPTANCE', data: ele});
     } else if (ele.object_type === 'TX_STOCK_REISSUANCE') {
       promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
