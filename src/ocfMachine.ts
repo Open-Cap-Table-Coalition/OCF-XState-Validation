@@ -73,11 +73,11 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_stock_acceptance,
             actions: (context: any, event: any) => {
-              context.stockIssuances = context.stockIssuances.filter(
-                (obj: any) => {
-                  return obj.security_id !== event.data.security_id;
-                }
-              );
+              // context.stockIssuances = context.stockIssuances.filter(
+              //   (obj: any) => {
+              //     return obj.security_id !== event.data.security_id;
+              //   }
+              // );
             },
           },
           {
