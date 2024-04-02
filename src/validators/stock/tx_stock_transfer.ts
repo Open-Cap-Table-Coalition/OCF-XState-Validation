@@ -30,7 +30,6 @@ const valid_tx_stock_transfer = (context: any, event: any) => {
       );
     }
   });
-
   if (!incoming_stockIssuance_validity) {
     console.log(
       `\x1b[91m\u2718 The incoming security (${event.data.security_id}) for this transfer does not exist in the current cap table.\x1b[0m`
@@ -197,7 +196,6 @@ const valid_tx_stock_transfer = (context: any, event: any) => {
 
   // Check that the sum of the quantities of the resulting issuance (and the balance issuance if it exists) is equal to the quantity of the incoming issuance.
   let outgoing_total_sum = outgoing_resulting_sum;
-
   if (event.data.balance_security_id) {
     context.stockIssuances.forEach((ele: any) => {
       if (
