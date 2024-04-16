@@ -2,7 +2,6 @@ import {transactions} from '../../test_data/data';
 
 const valid_tx_stock_acceptance = (context: any, event: any) => {
   let valid = false;
-  valid = true;
   // TBC: validation of tx_stock_acceptance
 
   // Check that stock issuance in incoming security_id referenced by transaction exists in current state.
