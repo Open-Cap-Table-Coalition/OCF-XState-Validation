@@ -56,34 +56,55 @@ for (let i = 0; i < sorted_transactions.length; i++) {
       }
     }
     currentDate = ele.date;
-    if (ele.object_type === 'TX_STOCK_ISSUANCE') {
-      console.log(
-        `\x1b[93m\nAnalyzing stock issuance with id: ${ele.id}.\x1b[0m`
-      );
-      promiseService.send({type: 'TX_STOCK_ISSUANCE', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_TRANSFER') {
-      console.log(
-        `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}.\x1b[0m`
-      );
-      promiseService.send({type: 'TX_STOCK_TRANSFER', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_CANCELLATION') {
-      console.log(
-        `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}.\x1b[0m`
-      );
-      promiseService.send({type: 'TX_STOCK_CANCELLATION', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_RETRACTION') {
-      promiseService.send({type: 'TX_STOCK_RETRACTION', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_ACCEPTANCE') {
-      console.log(
-        `\x1b[93m\nAnalyzing stock acceptance with id: ${ele.id}.\x1b[0m`
-      );
-      promiseService.send({type: 'TX_STOCK_ACCEPTANCE', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_REISSUANCE') {
-      promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_CONVERSION') {
-      promiseService.send({type: 'TX_STOCK_CONVERSION', data: ele});
-    } else if (ele.object_type === 'TX_STOCK_REPURCHASE') {
-      promiseService.send({type: 'TX_STOCK_REPURCHASE', data: ele});
+    switch (ele.object_type) {
+      case 'TX_STOCK_ISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing stock issuance with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_ISSUANCE', data: ele});
+        break;
+      case 'TX_STOCK_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_TRANSFER', data: ele});
+        break;
+      case 'TX_STOCK_CANCELLATION':
+        console.log(
+          `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_CANCELLATION', data: ele});
+        break;
+      case 'TX_STOCK_RETRACTION':
+        console.log(
+          `\x1b[93m\nAnalyzing stock retraction with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_RETRACTION', data: ele});
+        break;
+      case 'TX_STOCK_ACCEPTANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing stock acceptance with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_ACCEPTANCE', data: ele});
+        break;
+      case 'TX_STOCK_REISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing stock reissuance with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
+        break;
+      case 'TX_STOCK_CONVERSION':
+        console.log(
+          `\x1b[93m\nAnalyzing stock conversion with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_CONVERSION', data: ele});
+        break;
+      case 'TX_STOCK_REPURCHASE':
+        console.log(
+          `\x1b[93m\nAnalyzing stock repurchase with id: ${ele.id}.\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_REPURCHASE', data: ele});
+        break;
     }
   } else {
     break;

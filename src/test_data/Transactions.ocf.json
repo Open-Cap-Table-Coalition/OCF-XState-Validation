@@ -76,6 +76,27 @@
       "date": "2022-09-01",
       "reason_text": "Cancelling the remaining securities",
       "quantity": "100000"
+    },
+    {
+      "id": "si_05",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2023-01-01",
+      "security_id": "stock_issuance_05",
+      "custom_id": "OA-5",
+      "stakeholder_id": "charlieCofounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryA",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "25000",
+      "stock_legend_ids": []
+    },
+    {
+      "id": "stock_retraction_01",
+      "object_type": "TX_STOCK_RETRACTION",
+      "date": "2023-01-05",
+      "security_id": "stock_issuance_05",
+      "comments": [],
+      "reason_text": "Issued in error."
     }
   ]
 }
