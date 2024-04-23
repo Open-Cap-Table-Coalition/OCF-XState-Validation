@@ -1,6 +1,8 @@
-import {transactions} from '../../test_data/data';
+import {OcfMachineContext} from '../../ocfMachine';
 
-const valid_tx_stock_acceptance = (context: any, event: any) => {
+const valid_tx_stock_acceptance = (context: OcfMachineContext, event: any) => {
+  const {transactions} = context.ocfPackageContent;
+
   let valid = false;
   // TBC: validation of tx_stock_acceptance
 
@@ -25,7 +27,7 @@ const valid_tx_stock_acceptance = (context: any, event: any) => {
 
   // Check to ensure that the date of transaction is the same day or after the date of the incoming stock issuance.
   let incoming_date_validity = false;
-  transactions.items.forEach((ele: any) => {
+  transactions.forEach((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'

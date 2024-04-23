@@ -1,0 +1,485 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "board_approval_date": "2020-09-12",
+      "date": "2020-09-12",
+      "id": "a810d0a3-16a1-4014-a071-990dcda62b09",
+      "new_shares_authorized": "10000000",
+      "object_type": "TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT",
+      "stock_class_id": "a810d0a3-16a1-4014-a071-990dcda62b09"
+    },
+    {
+      "board_approval_date": "2023-03-31",
+      "date": "2023-03-31",
+      "id": "a810d0a3-16a1-4014-a071-990dcda62b09",
+      "new_shares_authorized": "11898725",
+      "object_type": "TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT",
+      "stock_class_id": "a810d0a3-16a1-4014-a071-990dcda62b09"
+    },
+    {
+      "board_approval_date": "2023-03-31",
+      "date": "2023-03-31",
+      "id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "new_shares_authorized": "1279936",
+      "object_type": "TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad"
+    },
+    {
+      "board_approval_date": "2023-03-03",
+      "date": "2023-03-03",
+      "id": "1a7caf84-1f42-4c9b-9c53-56df0126f5ce",
+      "object_type": "TX_STOCK_PLAN_POOL_ADJUSTMENT",
+      "shares_reserved": "1592506",
+      "stock_plan_id": "5cb7bdfa-ad7a-435f-9094-a7d608e3422d"
+    },
+    {
+      "custom_id": "SSP-5",
+      "date": "2023-03-31",
+      "id": "0dc08616-a5f2-4cc9-b6c3-e03a822e8f4d",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "28571",
+      "security_id": "02404b1e-131e-4d6e-8cb7-b10100edb817",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "5f3d3ce6-1bc8-4e01-bc34-e69a70d7acbc",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "NVC-5",
+      "date": "2023-03-29",
+      "id": "45edc543-875c-4aa9-876a-2144372161e1",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "15625",
+      "security_id": "1d921c51-6579-4cc8-b8d3-c976c43a753d",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.04",
+        "currency": "USD"
+      },
+      "stakeholder_id": "1eb631eb-3ba3-4cb4-8a62-73763a906c32",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "NVC-3",
+      "date": "2023-03-15",
+      "id": "d78be9e2-05b4-4cee-a0e1-b23cd75048a2",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "8333",
+      "security_id": "2ae7554f-8169-488b-836a-dfc40bc77c97",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.04",
+        "currency": "USD"
+      },
+      "stakeholder_id": "7ed93917-aadd-4dfd-900a-91a711fdab8f",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-9",
+      "date": "2023-03-31",
+      "id": "1772ec2b-4937-4673-937f-4f1bf940b1f0",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "14285",
+      "security_id": "3175b218-5789-4ef9-96e7-3972d9f5eb1a",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "66241f4a-0099-47fa-abe2-5b63e67a64c5",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "VC-1",
+      "date": "2020-07-01",
+      "id": "65435c3d-c56e-4dc4-b4ad-ee16ac5a392a",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "4500000",
+      "security_id": "34078c7e-7924-4847-841f-12b904f16e84",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.0001",
+        "currency": "USD"
+      },
+      "stakeholder_id": "d31083ec-8e9d-4bb0-a5c4-fcb1d2ede8c9",
+      "stock_class_id": "a810d0a3-16a1-4014-a071-990dcda62b09",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-20",
+      "date": "2023-03-31",
+      "id": "a5582e06-8e90-4581-aa26-5330e3f147e0",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "17926",
+      "security_id": "34ea5b74-c028-4bde-b747-e136d912a499",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "2.7892",
+        "currency": "USD"
+      },
+      "stakeholder_id": "dd7b9686-ab50-4088-ab51-e42d272a52bc",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-13",
+      "date": "2023-03-31",
+      "id": "22b1276f-fcca-4f35-a439-2520f7b84987",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "40355",
+      "security_id": "425a6183-0e6b-4d03-80e7-c6028ca729cf",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8585",
+        "currency": "USD"
+      },
+      "stakeholder_id": "2e72e186-3f28-4858-8718-60137c4dedd0",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-4",
+      "date": "2023-03-31",
+      "id": "e4325289-d777-4577-ae47-05adf6a58b79",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "21428",
+      "security_id": "454e0968-a138-404c-98d3-3167223e57e0",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "d648acce-7c95-47bb-9ba7-5ed35120d0f8",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-21",
+      "date": "2023-03-31",
+      "id": "df0dd693-6140-42eb-83c4-ffdb7ca57455",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "17926",
+      "security_id": "4f367726-3c94-42b9-a0c1-2ad3692d5e58",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "2.7892",
+        "currency": "USD"
+      },
+      "stakeholder_id": "e36b02be-4c3f-4a6b-b021-66148c8d7b42",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-10",
+      "date": "2023-03-31",
+      "id": "086519b0-67bf-4eaa-9546-24f8cc8b54bb",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "21428",
+      "security_id": "55d49955-5367-42ce-9939-f872fb13706b",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "33996fdc-b8d7-40f9-978c-ac5b65e53bef",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "VC-2",
+      "date": "2020-07-01",
+      "id": "1f6eca28-d9b1-4964-8e75-eb7cb396bb67",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "5500000",
+      "security_id": "7b482e95-3417-4888-bcac-2f72de0c73dc",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.0001",
+        "currency": "USD"
+      },
+      "stakeholder_id": "457e3454-9c26-4969-9fe5-f4a7b1828252",
+      "stock_class_id": "a810d0a3-16a1-4014-a071-990dcda62b09",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-3",
+      "date": "2023-03-31",
+      "id": "62948685-a53c-45df-bf0e-e548509d0251",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "57142",
+      "security_id": "8e3326cf-d731-4f21-ae93-31ce286fa6a5",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "ce7420db-190a-440f-ba43-45ceb4c7eca6",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-1",
+      "date": "2023-03-31",
+      "id": "44ae9685-010a-4ee2-9fa1-093a913b79c5",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "571428",
+      "security_id": "8ec0de9d-7daf-41f8-a92d-0049a118afce",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "9a1acfc0-47b8-43b6-93fe-42f541cd9e70",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-17",
+      "date": "2023-03-31",
+      "id": "6bc66aa9-3f32-4bb1-bde3-0fb6542ea95c",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "53779",
+      "security_id": "96e7148d-4e58-419c-9ce0-dda5afd66ffe",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8595",
+        "currency": "USD"
+      },
+      "stakeholder_id": "1548eae8-59be-4cfd-b36d-588d7b10e7d8",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "NVC-2",
+      "date": "2022-11-22",
+      "id": "df1ec009-6a73-4f0a-aa40-bc33fe7c3fec",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "100000",
+      "security_id": "a85c6646-f370-4f2b-b707-7a1c5d841cdb",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.04",
+        "currency": "USD"
+      },
+      "stakeholder_id": "779ed4c7-f933-4089-b7da-92caba725cbf",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "NVC-4",
+      "date": "2023-03-22",
+      "id": "8ef6284c-ebbb-4f98-82ba-5e6946580a5c",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "25000",
+      "security_id": "b0635f1d-b5ed-41d2-a34e-9beda60bafc1",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.04",
+        "currency": "USD"
+      },
+      "stakeholder_id": "779ed4c7-f933-4089-b7da-92caba725cbf",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-18",
+      "date": "2023-03-31",
+      "id": "8d831490-813b-478b-bbfb-b71633352d26",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "181332",
+      "security_id": "b0d092d8-c260-45b9-87d6-0532976a6e76",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "2.7574",
+        "currency": "USD"
+      },
+      "stakeholder_id": "d02923e4-fba9-4c63-a9c9-e7bfde23a9d2",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-19",
+      "date": "2023-03-31",
+      "id": "ad4c075d-176e-4965-9b4f-14a32b6fd2a8",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "89632",
+      "security_id": "bab7784b-dc04-461f-b5f7-628a28cccaec",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "2.7892",
+        "currency": "USD"
+      },
+      "stakeholder_id": "7682e4dd-5bef-49e8-a36f-c238309b4eab",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-14",
+      "date": "2023-03-31",
+      "id": "f0809319-41d3-47f1-a48f-be58c87e84b3",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "5378",
+      "security_id": "c4c2bf16-b060-457e-a5b5-514b43ca25f0",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8594",
+        "currency": "USD"
+      },
+      "stakeholder_id": "f6182e13-e9c3-4d68-8987-bf38494c5342",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "NVC-1",
+      "date": "2020-11-11",
+      "id": "0fc69185-b07a-4b1d-9b14-a9b5879f1e23",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "225000",
+      "security_id": "c7434059-8b2e-484b-bcca-1207bf770952",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "0.04",
+        "currency": "USD"
+      },
+      "stakeholder_id": "387a18f2-79ce-4bea-84eb-2dcc5b3ead2e",
+      "stock_class_id": "30192429-a308-4234-884e-c9fe573a9dad",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-7",
+      "date": "2023-03-31",
+      "id": "bc62230a-b9a6-4304-9153-6a73f7d8c5d0",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "27142",
+      "security_id": "ccbb5242-d4eb-452c-be04-289fc238eb32",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "a236fa35-f7bc-4714-9a37-43b9b9f5de9c",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-2",
+      "date": "2023-03-31",
+      "id": "33fab858-4e91-4727-a35b-75139b30c966",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "285714",
+      "security_id": "d3d9820b-4285-4bf5-b605-a61c725bada0",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "c1b36038-dcb6-40aa-8e45-5a43698779d9",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-16",
+      "date": "2023-03-31",
+      "id": "31fb3e87-71f7-4a09-b1c9-783cb899689f",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "53779",
+      "security_id": "d95dd5b2-f9a2-421c-807b-da597c04e40c",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8595",
+        "currency": "USD"
+      },
+      "stakeholder_id": "417b1a84-80f2-45c7-9b7a-8bc54b2b8c70",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-8",
+      "date": "2023-03-31",
+      "id": "20637f3d-2fb0-4f60-b58c-c9b7c7bb43b2",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "57142",
+      "security_id": "e84ea2cc-9035-49c1-8518-da0ef492383e",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "66d4dc42-7ddd-472d-bda3-890423c94615",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-11",
+      "date": "2023-03-31",
+      "id": "1b1d3039-88bf-4202-b97a-21fdafd78100",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "31428",
+      "security_id": "ecc27822-4ff9-4470-a9b8-bb719212887c",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "53e17087-9a97-4c5f-a701-4f6a8fdc39cd",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-12",
+      "date": "2023-03-31",
+      "id": "e2709585-b410-4b0b-b241-cc84d1643a29",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "26980",
+      "security_id": "f4d45d4b-8b08-48be-b271-6788007f6c8a",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8532",
+        "currency": "USD"
+      },
+      "stakeholder_id": "4d196bf1-a023-4006-9313-4802f4d594ad",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-6",
+      "date": "2023-03-31",
+      "id": "1db244c6-501d-42ec-8160-9bc84a015778",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "27142",
+      "security_id": "f61df3c3-ecd8-4b8a-8d85-557868240f6f",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "3.5",
+        "currency": "USD"
+      },
+      "stakeholder_id": "58834607-c594-4581-badd-14fe48c56732",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    },
+    {
+      "custom_id": "SSP-15",
+      "date": "2023-03-31",
+      "id": "dbbf24d5-7ee8-4ce7-8e86-4ab5f55c3c31",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "quantity": "268897",
+      "security_id": "f6bacfe7-8831-4a2f-89f7-77e1fd1b13a5",
+      "security_law_exemptions": null,
+      "share_price": {
+        "amount": "1.8594",
+        "currency": "USD"
+      },
+      "stakeholder_id": "d02923e4-fba9-4c63-a9c9-e7bfde23a9d2",
+      "stock_class_id": "1c76e51b-95a5-4184-ba80-5a5c467f550b",
+      "stock_legend_ids": null
+    }
+  ]
+}

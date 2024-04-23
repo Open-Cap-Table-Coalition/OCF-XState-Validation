@@ -1,9 +1,9 @@
-import {transactions} from '../../test_data/data';
+import {OcfMachineContext} from '../../ocfMachine';
 
-const valid_tx_stock_repurchase = (context: any, event: any) => {
+const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   let valid = false;
   // TBC: validation of tx_stock_repurchase
-
+  const {transactions} = context.ocfPackageContent;
   // Check that stock issuance in incoming security_id referenced by transaction exists in current state.
   let incoming_stockIssuance_validity = false;
   context.stockIssuances.forEach((ele: any) => {
@@ -25,7 +25,7 @@ const valid_tx_stock_repurchase = (context: any, event: any) => {
 
   // Check to ensure that the date of transaction is the same day or after the date of the incoming stock issuance.
   let incoming_date_validity = false;
-  transactions.items.forEach((ele: any) => {
+  transactions.forEach((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
