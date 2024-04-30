@@ -1,13 +1,19 @@
 import * as xstate from 'xstate';
 import constants from './constants/constants';
-import ocfMachine from './ocfMachine';
+import {readManifest} from './helpers/manifest';
+import ocfMachine, {OcfMachineContext} from './ocfMachine';
 
-import {manifest, transactions} from './test_data/data';
+const manifestPath =
+  process.argv[2] || './src/test_data/test_company/manifest.ocf.json';
 
-// Sort the transactions in the file by date and then object type. The idea is that the transactions should be processed based on their date and for any given day, the issuance transactions are processed first so the machine can easily reference them in the current state.
+const ocfPackageContent = readManifest(manifestPath);
+
+const {manifest, transactions} = ocfPackageContent;
+
 const transaction_types = constants.transaction_types;
 
-const sorted_transactions = transactions.items.sort(
+// Sort the transactions in the file by date and then object type. The idea is that the transactions should be processed based on their date and for any given day, the issuance transactions are processed first so the machine can easily reference them in the current state.
+const sorted_transactions = transactions.sort(
   (
     a: {date: string; object_type: string},
     b: {date: string; object_type: string}
@@ -18,7 +24,12 @@ const sorted_transactions = transactions.items.sort(
 );
 
 // Create xState machine
-const promiseMachine = xstate.createMachine<any>(ocfMachine);
+const promiseMachine = xstate
+  .createMachine<OcfMachineContext>(ocfMachine)
+  .withContext({
+    stockIssuances: [],
+    ocfPackageContent: ocfPackageContent,
+  });
 
 const promiseService = xstate.interpret(promiseMachine).onTransition(state => {
   if (state.value === 'validationError') {
@@ -59,49 +70,49 @@ for (let i = 0; i < sorted_transactions.length; i++) {
     switch (ele.object_type) {
       case 'TX_STOCK_ISSUANCE':
         console.log(
-          `\x1b[93m\nAnalyzing stock issuance with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock issuance with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_ISSUANCE', data: ele});
         break;
       case 'TX_STOCK_TRANSFER':
         console.log(
-          `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_TRANSFER', data: ele});
         break;
       case 'TX_STOCK_CANCELLATION':
         console.log(
-          `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_CANCELLATION', data: ele});
         break;
       case 'TX_STOCK_RETRACTION':
         console.log(
-          `\x1b[93m\nAnalyzing stock retraction with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock retraction with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_RETRACTION', data: ele});
         break;
       case 'TX_STOCK_ACCEPTANCE':
         console.log(
-          `\x1b[93m\nAnalyzing stock acceptance with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock acceptance with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_ACCEPTANCE', data: ele});
         break;
       case 'TX_STOCK_REISSUANCE':
         console.log(
-          `\x1b[93m\nAnalyzing stock reissuance with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock reissuance with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
         break;
       case 'TX_STOCK_CONVERSION':
         console.log(
-          `\x1b[93m\nAnalyzing stock conversion with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock conversion with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_CONVERSION', data: ele});
         break;
       case 'TX_STOCK_REPURCHASE':
         console.log(
-          `\x1b[93m\nAnalyzing stock repurchase with id: ${ele.id}.\x1b[0m`
+          `\x1b[93m\nAnalyzing stock repurchase with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_REPURCHASE', data: ele});
         break;

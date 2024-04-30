@@ -1,0 +1,194 @@
+{
+  "file_type": "OCF_STAKEHOLDERS_FILE",
+  "items": [
+    {
+      "id": "047daec0-ab68-44a1-833f-405031dcac2c",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "b"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "b"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "255c6c84-215d-4dc1-a55e-a88d5ea4eddb",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "e"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "e"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "3f851820-6bc9-4533-a96c-d1ff82410170",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "a"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "a"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "40bc0f63-1df0-40f4-a16a-4909b64ccef6",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "inv@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "Inv"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "inv@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "Inv"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "e333ed18-fa7e-415f-8db2-a534895f81ca",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "d"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "d"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "e49d4393-db4c-4270-869d-f55c52e139b1",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "c"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "investor@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "c"
+        }
+      },
+      "stakeholder_type": ""
+    },
+    {
+      "id": "ef54a026-8a57-4a52-b9d9-a822f794a22d",
+      "object_type": "STAKEHOLDER",
+      "contact_info": {
+        "emails": [
+          {
+            "email_address": "ceo@example.com",
+            "email_type": "PERSONAL"
+          }
+        ]
+      },
+      "name": {
+        "legal_name": "CEO"
+      },
+      "primary_contact": {
+        "emails": [
+          {
+            "email_address": "ceo@example.com",
+            "email_type": "PERSONAL"
+          }
+        ],
+        "name": {
+          "legal_name": "CEO"
+        }
+      },
+      "stakeholder_type": ""
+    }
+  ]
+}
