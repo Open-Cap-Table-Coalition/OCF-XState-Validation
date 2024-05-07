@@ -1,10 +1,16 @@
+import {OcfPackageContent} from './helpers/manifest';
 import validators from './validators';
+
+export type OcfMachineContext = {
+  stockIssuances: any[];
+  ocfPackageContent: OcfPackageContent;
+};
 
 const ocfMachine: any = {
   predictableActionArguments: true,
   id: 'OCF-xstate',
   initial: 'capTable',
-  context: {stockIssuances: []},
+  context: {stockIssuances: [], ocfPackageContent: {}},
   states: {
     capTable: {
       on: {

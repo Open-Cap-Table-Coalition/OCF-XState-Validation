@@ -1,0 +1,48 @@
+{
+  "file_type": "",
+  "as_of": "2024-04-23T12:59:47-04:00",
+  "generated_at": "",
+  "issuer": {
+    "id": "128f9b7e-edae-482a-8042-20e079cd17f9",
+    "object_type": "ISSUER",
+    "address": {
+      "address_type": "LEGAL",
+      "city": "123",
+      "country": "United States",
+      "country_subdivision": "312",
+      "postal_code": "132",
+      "street_suite": "213"
+    },
+    "country_of_formation": "",
+    "formation_date": "",
+    "legal_name": ""
+  },
+  "ocf_version": "0.7.0",
+  "stakeholders_files": [
+    {
+      "filepath": "stakeholders.ocf.json",
+      "md5": ""
+    }
+  ],
+  "stock_classes_files": [
+    {
+      "filepath": "stock_classes.ocf.json",
+      "md5": ""
+    }
+  ],
+  "stock_legend_templates_files": null,
+  "stock_plans_files": [
+    {
+      "filepath": "stock_plans.ocf.json",
+      "md5": ""
+    }
+  ],
+  "transactions_files": [
+    {
+      "filepath": "transactions.ocf.json",
+      "md5": ""
+    }
+  ],
+  "valuations_files": null,
+  "vesting_terms_files": null
+}

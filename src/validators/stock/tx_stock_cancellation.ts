@@ -1,8 +1,13 @@
-import {transactions} from '../../test_data/data';
 // Reference for tx_stock_cancellation: https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/cancellation/PlanSecurityCancellation/
 
-const valid_tx_stock_cancellation = (context: any, event: any) => {
+import {OcfMachineContext} from '../../ocfMachine';
+
+const valid_tx_stock_cancellation = (
+  context: OcfMachineContext,
+  event: any
+) => {
   let valid = false;
+  const {transactions} = context.ocfPackageContent;
 
   // Check that stock issuance in incoming security_id reference by transaction exists in current state.
   let incoming_stockIssuance_validity = false;
@@ -23,7 +28,7 @@ const valid_tx_stock_cancellation = (context: any, event: any) => {
 
   // Check to ensure that the date of transaction is the same day or after the date of the incoming stock issuance.
   let incoming_date_validity = false;
-  transactions.items.forEach((ele: any) => {
+  transactions.forEach((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
