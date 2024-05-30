@@ -20,7 +20,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
 
   // Check that stock issuance in incoming security_id referenced by transaction exists in current state.
   let incoming_stockIssuance_validity = false;
-  context.stockIssuances.forEach((ele: any) => {
+  context.stockIssuances.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -39,7 +39,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
 
   // Check to ensure that the date of transaction is the same day or after the date of the incoming stock issuance.
   let incoming_date_validity = false;
-  transactions.forEach((ele: any) => {
+  transactions.items.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -60,7 +60,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
 
   // Check that the quantity of the transfer is less or equal to the quantity of the incoming issuance.
   let incoming_quantity_validity = false;
-  transactions.forEach((ele: any) => {
+  transactions.items.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -84,7 +84,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   for (let i = 0; i < event.data.resulting_security_ids.length; i++) {
     const res = event.data.resulting_security_ids[i];
     resulting_stockIssuances_validity = false;
-    transactions.forEach((ele: any) => {
+    transactions.items.map((ele: any) => {
       if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE') {
         resulting_stockIssuances_validity = true;
         console.log(
@@ -105,7 +105,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   for (let i = 0; i < event.data.resulting_security_ids.length; i++) {
     const res = event.data.resulting_security_ids[i];
     resulting_dates_validity = false;
-    transactions.forEach((ele: any) => {
+    transactions.items.map((ele: any) => {
       if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE') {
         if (ele.date === event.data.date) {
           resulting_dates_validity = true;
@@ -129,7 +129,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   if (event.data.balance_security_id) {
     // Check that stock issuance for the balance security_id referenced by transaction exists in current state.
     balance_stockIssuance_validity = false;
-    context.stockIssuances.forEach((ele: any) => {
+    context.stockIssuances.map((ele: any) => {
       if (
         ele.security_id === event.data.balance_security_id &&
         ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -143,7 +143,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
 
     // Check to ensure that the date of transaction is the same day as the date of the balance stock issuance.
     balance_security_outgoing_date_validity = false;
-    transactions.forEach((ele: any) => {
+    transactions.items.map((ele: any) => {
       if (
         ele.security_id === event.data.balance_security_id &&
         ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -174,7 +174,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   let outgoing_resulting_sum = 0;
   for (let i = 0; i < event.data.resulting_security_ids.length; i++) {
     const res = event.data.resulting_security_ids[i];
-    context.stockIssuances.forEach((ele: any) => {
+    context.stockIssuances.map((ele: any) => {
       if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE') {
         outgoing_resulting_sum += parseFloat(ele.quantity);
       }
@@ -198,7 +198,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   // Check that the sum of the quantities of the resulting issuance (and the balance issuance if it exists) is equal to the quantity of the incoming issuance.
   let outgoing_total_sum = outgoing_resulting_sum;
   if (event.data.balance_security_id) {
-    context.stockIssuances.forEach((ele: any) => {
+    context.stockIssuances.map((ele: any) => {
       if (
         ele.security_id === event.data.balance_security_id &&
         ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -209,7 +209,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
   }
 
   let outgoing_total_sum_validity = false;
-  context.stockIssuances.forEach((ele: any) => {
+  context.stockIssuances.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
