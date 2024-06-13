@@ -258,6 +258,15 @@
       "stock_legend_ids": null
     },
     {
+      "custom_id": "SAFE-1",
+      "date": "2023-03-31",
+      "id": "6bc66aa9-3f32-4bb1-bde3-0fb6542ea95c",
+      "object_type": "TX_CONVERTIBLE_ISSUANCE",
+      "investment_amount": {"currency":"USD","amount":"100000"},
+      "security_id": "96e7148d-4e58-419c-9ce0-dda5afd22eee",
+      "stakeholder_id": "1548eae8-59be-4cfd-b36d-588d7b10e7d8"
+    },
+    {
       "custom_id": "NVC-2",
       "date": "2022-11-22",
       "id": "df1ec009-6a73-4f0a-aa40-bc33fe7c3fec",

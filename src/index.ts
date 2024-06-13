@@ -28,6 +28,9 @@ const promiseMachine = xstate
   .createMachine<OcfMachineContext>(ocfMachine)
   .withContext({
     stockIssuances: [],
+    optionGrants: [],
+    convertibleIssuances: [],
+    warrantIssuances: [],
     ocfPackageContent: ocfPackageContent,
   });
 
@@ -74,18 +77,6 @@ for (let i = 0; i < sorted_transactions.length; i++) {
         );
         promiseService.send({type: 'TX_STOCK_ISSUANCE', data: ele});
         break;
-      case 'TX_STOCK_TRANSFER':
-        console.log(
-          `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}\x1b[0m`
-        );
-        promiseService.send({type: 'TX_STOCK_TRANSFER', data: ele});
-        break;
-      case 'TX_STOCK_CANCELLATION':
-        console.log(
-          `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}\x1b[0m`
-        );
-        promiseService.send({type: 'TX_STOCK_CANCELLATION', data: ele});
-        break;
       case 'TX_STOCK_RETRACTION':
         console.log(
           `\x1b[93m\nAnalyzing stock retraction with id: ${ele.id}\x1b[0m`
@@ -98,11 +89,11 @@ for (let i = 0; i < sorted_transactions.length; i++) {
         );
         promiseService.send({type: 'TX_STOCK_ACCEPTANCE', data: ele});
         break;
-      case 'TX_STOCK_REISSUANCE':
+      case 'TX_STOCK_CANCELLATION':
         console.log(
-          `\x1b[93m\nAnalyzing stock reissuance with id: ${ele.id}\x1b[0m`
+          `\x1b[93m\nAnalyzing stock cancellation with id: ${ele.id}\x1b[0m`
         );
-        promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
+        promiseService.send({type: 'TX_STOCK_CANCELLATION', data: ele});
         break;
       case 'TX_STOCK_CONVERSION':
         console.log(
@@ -110,11 +101,275 @@ for (let i = 0; i < sorted_transactions.length; i++) {
         );
         promiseService.send({type: 'TX_STOCK_CONVERSION', data: ele});
         break;
+      case 'TX_STOCK_REISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing stock reissuance with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_REISSUANCE', data: ele});
+        break;
       case 'TX_STOCK_REPURCHASE':
         console.log(
           `\x1b[93m\nAnalyzing stock repurchase with id: ${ele.id}\x1b[0m`
         );
         promiseService.send({type: 'TX_STOCK_REPURCHASE', data: ele});
+        break;
+      case 'TX_STOCK_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing stock transfer with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_TRANSFER', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_ISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible issuance with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_ISSUANCE', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_RETRACTION':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible retraction with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_RETRACTION', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_ACCEPTANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible acceptance with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_ACCEPTANCE', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_CANCELLATION':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible cancellation with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_CANCELLATION', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible transfer with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_TRANSFER', data: ele});
+        break;
+      case 'TX_CONVERTIBLE_CONVERSION':
+        console.log(
+          `\x1b[93m\nAnalyzing convertible conversion with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_CONVERTIBLE_CONVERSION', data: ele});
+        break;
+      case 'TX_WARRANT_ISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant issuance with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_ISSUANCE', data: ele});
+        break;
+      case 'TX_WARRANT_RETRACTION':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant retraction with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_RETRACTION', data: ele});
+        break;
+      case 'TX_WARRANT_ACCEPTANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant acceptance with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_ACCEPTANCE', data: ele});
+        break;
+      case 'TX_WARRANT_CANCELLATION':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant cancellation with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_CANCELLATION', data: ele});
+        break;
+      case 'TX_WARRANT_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant transfer with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_TRANSFER', data: ele});
+        break;
+      case 'TX_WARRANT_EXERCISE':
+        console.log(
+          `\x1b[93m\nAnalyzing warrant conversion with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_WARRANT_EXERCISE', data: ele});
+        break;
+      case 'TX_STOCK_CLASS_CONVERSION_RATIO_ADJUSTMENT':
+        console.log(
+          `\x1b[93m\nAnalyzing stock class conversion ratio adjustment with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_STOCK_CLASS_CONVERSION_RATIO_ADJUSTMENT',
+          data: ele,
+        });
+        break;
+      case 'TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT':
+        console.log(
+          `\x1b[93m\nAnalyzing stock class authoriszed shares adjustment with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_STOCK_CLASS_AUTHORIZED_SHARES_ADJUSTMENT',
+          data: ele,
+        });
+        break;
+      case 'TX_STOCK_CLASS_SPLIT':
+        console.log(
+          `\x1b[93m\nAnalyzing stock class split with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_CLASS_SPLIT', data: ele});
+        break;
+      case 'TX_STOCK_PLAN_POOL_ADJUSTMENT':
+        console.log(
+          `\x1b[93m\nAnalyzing stock plan pool adjustment with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_PLAN_POOL_ADJUSTMENT', data: ele});
+        break;
+      case 'TX_STOCK_PLAN_RETURN_TO_POOL':
+        console.log(
+          `\x1b[93m\nAnalyzing stock plan return to pool with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_STOCK_PLAN_RETURN_TO_POOL', data: ele});
+        break;
+      case 'TX_VESTING_ACCELERATION':
+        console.log(
+          `\x1b[93m\nAnalyzing vesting acceleration event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_VESTING_ACCELERATION', data: ele});
+        break;
+      case 'TX_VESTING_START':
+        console.log(
+          `\x1b[93m\nAnalyzing vesting start event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_VESTING_START', data: ele});
+        break;
+      case 'TX_VESTING_EVENT':
+        console.log(
+          `\x1b[93m\nAnalyzing vesting event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({type: 'TX_VESTING_EVENT', data: ele});
+        break;
+      case 'TX_EQUITY_COMPENSATION_ISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation issuance event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_ISSUANCE',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_RETRACTION':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation retraction event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_RETRACTION',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_ACCEPTANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation acceptance event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_ACCEPTANCE',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_CANCELLATION':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation cancellation event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_CANCELLATION',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_RELEASE':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation release event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_RELEASE',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation transfer event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_TRANSFER',
+          data: ele,
+        });
+        break;
+      case 'TX_EQUITY_COMPENSATION_EXERCISE':
+        console.log(
+          `\x1b[93m\nAnalyzing equity compensation exercise event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_EQUITY_COMPENSATION_EXERCISE',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_ISSUANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security issuance event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_ISSUANCE',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_RETRACTION':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security retraction event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_RETRACTION',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_ACCEPTANCE':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security acceptance event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_ACCEPTANCE',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_CANCELLATION':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security cancellation event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_CANCELLATION',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_RELEASE':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security release event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_RELEASE',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_TRANSFER':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security transfer event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_TRANSFER',
+          data: ele,
+        });
+        break;
+      case 'TX_PLAN_SECURITY_EXERCISE':
+        console.log(
+          `\x1b[93m\nAnalyzing plan security exercise event with id: ${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'TX_PLAN_SECURITY_EXERCISE',
+          data: ele,
+        });
         break;
     }
   } else {
