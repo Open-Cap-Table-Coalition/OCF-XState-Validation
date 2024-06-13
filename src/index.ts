@@ -371,6 +371,14 @@ for (let i = 0; i < sorted_transactions.length; i++) {
           data: ele,
         });
         break;
+      default:
+        console.log(
+          `\x1b[91m\u2718 ${ele.object_type} is not a valid transaction type for OCF. id:${ele.id}\x1b[0m`
+        );
+        promiseService.send({
+          type: 'INVALID_TX',
+          data: ele,
+        });
     }
   } else {
     break;

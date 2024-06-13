@@ -542,6 +542,11 @@ const ocfMachine: any = {
             target: 'validationError',
           },
         ],
+        INVALID_TX: [
+          {
+            target: 'validationError',
+          },
+        ],
         RUN_EOD: {
           taget: 'capTable',
           actions: (context: any, event: any) => {
