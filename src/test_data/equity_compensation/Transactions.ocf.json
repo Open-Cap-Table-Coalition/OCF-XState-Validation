@@ -1,0 +1,96 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "id": "eci_01",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_01",
+      "custom_id": "EC-1",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "48000",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_year_one_year_cliff"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_01",
+      "security_id": "equity_compensation_issuance_01",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "object_type": "TX_STOCK_ISSUANCE",
+      "id": "si_01",
+      "security_id": "exercised_stock_issuance_01",
+      "date": "2021-06-15",
+      "security_law_exemptions": [],
+      "stakeholder_id": "emilyEmployee",
+      "custom_id": "OB-1",
+      "stock_class_id": "ordinaryB",
+      "share_price": {
+        "amount": "0.1",
+        "currency": "USD"
+      },
+      "quantity": "12000",
+      "cost_basis": {
+        "amount": "1200",
+        "currency": "USD"
+      },
+      "stock_legend_ids": []
+    },
+    {
+      "object_type": "TX_EQUITY_COMPENSATION_EXERCISE",
+      "id": "EQUITY_COMPENSATION_EXERCISE_1",
+      "security_id": "equity_compensation_issuance_01",
+      "date": "2021-06-15",
+      "resulting_security_ids": ["exercised_stock_issuance_01"],
+      "quantity": "12000",
+      "consideration_text": "1200 USD, Wire",
+      "comments": [""]
+    },
+    {
+      "object_type": "TX_EQUITY_COMPENSATION_EXERCISE",
+      "id": "EQUITY_COMPENSATION_EXERCISE_2",
+      "security_id": "equity_compensation_issuance_01",
+      "date": "2021-07-15",
+      "resulting_security_ids": ["exercised_stock_issuance_02"],
+      "quantity": "1000",
+      "consideration_text": "100 USD, Wire",
+      "comments": [""]
+    },
+    {
+      "object_type": "TX_STOCK_ISSUANCE",
+      "id": "si_02",
+      "security_id": "exercised_stock_issuance_02",
+      "date": "2021-07-15",
+      "security_law_exemptions": [],
+      "stakeholder_id": "emilyEmployee",
+      "custom_id": "OB-2",
+      "stock_class_id": "ordinaryB",
+      "share_price": {
+        "amount": "0.1",
+        "currency": "USD"
+      },
+      "quantity": "1000",
+      "cost_basis": {
+        "amount": "100",
+        "currency": "USD"
+      },
+      "stock_legend_ids": []
+    }
+  ]
+}

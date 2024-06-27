@@ -6,6 +6,8 @@ export type OcfPackageContent = {
   stakeholders: any;
   stockClasses: any;
   transactions: any;
+  stockPlans: any;
+  vestingTerms: any;
 };
 
 type file = {
@@ -45,10 +47,29 @@ export const readManifest = (manifestPath: string): OcfPackageContent => {
     );
   });
 
+  const vestingTerms: any[] = [];
+  manifest.vesting_terms_files.forEach((file: file) => {
+    vestingTerms.push(
+      ...JSON.parse(
+        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+      ).items
+    );
+  });
+
+  const stockPlans: any[] = [];
+  manifest.stock_plans_files.forEach((file: file) => {
+    stockPlans.push(
+      ...JSON.parse(
+        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+      ).items
+    );
+  });
   return {
     manifest,
     stakeholders,
     stockClasses,
     transactions,
+    stockPlans,
+    vestingTerms,
   };
 };
