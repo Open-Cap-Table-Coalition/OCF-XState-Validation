@@ -46,6 +46,7 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
 
   let balance_stockIssuance_validity = true;
   let balance_security_outgoing_date_validity = true;
+
   if (event.data.balance_security_id) {
     // Check that stock issuance for the balance security_id referenced by transaction exists in current state.
     balance_stockIssuance_validity = false;
@@ -62,7 +63,8 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
     });
     // Check to ensure that the date of transaction is the same day as the date of the balance stock issuance.
     balance_security_outgoing_date_validity = false;
-    transactions.items.forEach((ele: any) => {
+
+    transactions.forEach((ele: any) => {
       if (
         ele.security_id === event.data.balance_security_id &&
         ele.object_type === 'TX_STOCK_ISSUANCE'
@@ -76,17 +78,21 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
       }
     });
   }
+
   if (!balance_stockIssuance_validity) {
     console.log(
       `\x1b[91m\u2718 The balance security (${event.data.balance_security_id}) for this repurchase does not exist in the current cap table.\x1b[0m`
     );
   }
-  if (balance_stockIssuance_validity && !balance_security_outgoing_date_validity) {
+  if (
+    balance_stockIssuance_validity &&
+    !balance_security_outgoing_date_validity
+  ) {
     console.log(
       `\x1b[91m\u2718 The date of this repurchase is not the same as the date of the incoming security (${event.data.balance_security_id}).\x1b[0m`
     );
   }
-  
+
   // Check that the sum of the quantities of the repurchase (and the balance issuance if it exists) equal to the quantity of the incoming security.
   let repurchase_and_balance_sum_validity = false;
   let repurchase_and_balance_quantity = parseFloat(event.data.quantity);
@@ -121,11 +127,12 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   }
 
   if (
-    incoming_stockIssuance_validity && 
-    incoming_date_validity && 
-    balance_stockIssuance_validity && 
+    incoming_stockIssuance_validity &&
+    incoming_date_validity &&
+    balance_stockIssuance_validity &&
     balance_security_outgoing_date_validity &&
-    repurchase_and_balance_sum_validity) {
+    repurchase_and_balance_sum_validity
+  ) {
     valid = true;
   }
 
