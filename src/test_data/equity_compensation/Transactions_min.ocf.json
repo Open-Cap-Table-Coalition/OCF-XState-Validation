@@ -228,7 +228,7 @@
       "security_law_exemptions": [],
       "stock_class_id": "ordinaryB",
       "stock_plan_id": "stock_plan_01",
-      "quantity": "39137",
+      "quantity": "2000",
       "exercise_price": {"amount": "0.1", "currency": "USD"},
       "compensation_type": "OPTION",
       "option_grant_type": "INTL",

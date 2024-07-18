@@ -335,7 +335,7 @@
                 "id": "start_condition",
                 "portion": {
                 "numerator": "0",
-                "denominator": "60"
+                "denominator": "48"
             },              "trigger": {
                     "type": "VESTING_START_DATE"
                 },
@@ -353,7 +353,7 @@
                     "period": {
                         "length": 1,
                         "type": "MONTHS",
-                        "occurrences": 60,
+                        "occurrences": 48,
                         "day_of_month": "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH"
                     },
                     "relative_to_condition_id": "start_condition"
@@ -368,7 +368,7 @@
                     "type": "CLIFF_CONDITION",
                     "period": {
                         "type": "MONTHS",
-                        "length": 18
+                        "length": 12
                     },                        
                     "relative_to_condition_id": "monthly_vesting_condition"
                 }
