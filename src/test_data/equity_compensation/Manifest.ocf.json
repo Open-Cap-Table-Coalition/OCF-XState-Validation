@@ -26,7 +26,7 @@
   ],
   "transactions_files": [
     {
-      "filepath": "./Transactions.ocf.json",
+      "filepath": "./Transactions_min.ocf.json",
       "md5": "ab35839164924530cac5eecbb19f2c4d"
     }
   ],
