@@ -1,0 +1,315 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+    {
+      "id": "eci_01",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_01",
+      "custom_id": "EC-1",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_cumulative_rounding"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_01",
+      "security_id": "equity_compensation_issuance_01",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_02",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_02",
+      "custom_id": "EC-2",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_cumulative_round_down"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_02",
+      "security_id": "equity_compensation_issuance_02",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_03",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_03",
+      "custom_id": "EC-3",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_front_loaded"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_03",
+      "security_id": "equity_compensation_issuance_03",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_04",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_04",
+      "custom_id": "EC-4",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_back_loaded"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_04",
+      "security_id": "equity_compensation_issuance_04",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_05",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_05",
+      "custom_id": "EC-5",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_front_loaded_single_tranche"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_05",
+      "security_id": "equity_compensation_issuance_05",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_06",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_06",
+      "custom_id": "EC-6",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_back_loaded_single_tranche"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_06",
+      "security_id": "equity_compensation_issuance_06",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_07",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_07",
+      "custom_id": "EC-7",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "18",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_month_no_cliff_back_fractional"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_07",
+      "security_id": "equity_compensation_issuance_07",
+      "vesting_condition_id": "start_condition",
+      "date": "2020-06-01"
+    },
+    {
+      "id": "eci_08",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_08",
+      "custom_id": "EC-8",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "2000",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_year_monthly_one_year_cliff_cumulative_rounding"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_08",
+      "security_id": "equity_compensation_issuance_08",
+      "vesting_condition_id": "start_condition",
+      "date": "2019-06-01"
+    },
+    {
+      "id": "eci_09",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_09",
+      "custom_id": "EC-9",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "2000",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "all_or_nothing"
+    },
+    {
+      "object_type": "TX_VESTING_EVENT",
+      "id": "eci_ve_09",
+      "security_id": "equity_compensation_issuance_09",
+      "vesting_condition_id": "qualifying_sale",
+      "date": "2020-10-30"
+    },
+    {
+      "id": "eci_10",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2020-06-01",
+      "security_id": "equity_compensation_issuance_10",
+      "custom_id": "EC-10",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "2000",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "6-yr-option-cumulative-rounding"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_10",
+      "security_id": "equity_compensation_issuance_10",
+      "vesting_condition_id": "vesting-start",
+      "date": "2020-06-01"
+    }
+  ]
+}

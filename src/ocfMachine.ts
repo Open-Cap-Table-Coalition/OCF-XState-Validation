@@ -311,7 +311,10 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_equity_compensation_issuance,
             actions: (context: any, event: any) => {
-              context.optionGrants.push(event.data);
+              context.optionGrants.push({
+                ...event.data,
+                availableToExercise: event.data.quantity,
+              });
             },
           },
           {
@@ -388,8 +391,19 @@ const ocfMachine: any = {
             target: 'capTable',
             cond: validators.valid_tx_equity_compensation_exercise,
             actions: (context: any, event: any) => {
-              context.optionGrants = context.optionGrants.filter((obj: any) => {
-                return obj.security_id !== event.data.security_id;
+              context.optionGrants.map((obj: any, index: any) => {
+                if (obj.security_id === event.data.security_id) {
+                  context.optionGrants[index].availableToExercise -= parseFloat(
+                    event.data.quantity
+                  );
+                  if (context.optionGrants[index].availableToExercise === 0) {
+                    context.optionGrants = context.optionGrants.filter(
+                      (obj: any) => {
+                        return obj.security_id !== event.data.security_id;
+                      }
+                    );
+                  }
+                }
               });
             },
           },
@@ -598,6 +612,22 @@ const ocfMachine: any = {
               console.table(warrant_table);
             } else {
               console.log('No outstanding warrants.');
+            }
+            const equity_compensation_table: any[] = [];
+            context.optionGrants.forEach((issuance: any) => {
+              equity_compensation_table.push({
+                'Equity type': 'Equity Compensation',
+                'Custom ID': issuance.custom_id,
+                'Warrant holder': issuance.stakeholder_id,
+                'Issue Date': issuance.date,
+                Quantity: `${issuance.quantity}`,
+                'Available to Exercise (including unvested)': `${issuance.availableToExercise}`,
+              });
+            });
+            if (equity_compensation_table.length > 0) {
+              console.table(equity_compensation_table);
+            } else {
+              console.log('No outstanding equity compensation.');
             }
           },
         },
