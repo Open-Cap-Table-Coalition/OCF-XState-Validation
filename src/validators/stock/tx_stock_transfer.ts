@@ -2,7 +2,7 @@ import {OcfMachineContext} from '../../ocfMachine';
 // Reference for tx_stock_transfer transaction: https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/transfer/StockTransfer/
 
 /*
-  LOGIC CHECKS:
+  CURRENT CHECKS:
     1. Does the incoming security_id referenced by transaction exist in current cap table state?
     2. Is the date of transaction the same day or after the date of the incoming issuance?
     3. Is the quantity of transfer equal to or less than the quantity of the incoming issuance?
@@ -123,6 +123,7 @@ const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
     }
   }
 
+  // Check that the balance stock issuance exists and the date of the balance stock issuance if applicable.
   let balance_stockIssuance_validity = true;
   let balance_security_outgoing_date_validity = true;
 
