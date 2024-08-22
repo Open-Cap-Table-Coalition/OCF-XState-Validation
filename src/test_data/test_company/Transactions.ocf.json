@@ -74,6 +74,7 @@
       "object_type": "TX_STOCK_CANCELLATION",
       "security_id": "stock_issuance_04",
       "date": "2022-09-01",
+      "balance_security_id": "",
       "reason_text": "Cancelling the remaining securities",
       "quantity": "100000"
     },
@@ -134,15 +135,26 @@
       "consideration_text": "Repurchasing 100,000 shares for the full amount"
     },
     {
-      "id": "INVALID_TX_TYPE_01",
-      "object_type": "TX_XXX",
-      "date": "2023-01-15",
+      "id": "sc_02",
+      "object_type": "TX_STOCK_CANCELLATION",
+      "security_id": "stock_issuance_03",
+      "date": "2022-06-30",
+      "balance_security_id": "stock_issuance_07",
+      "reason_text": "Partially cancelling 220,000 shares and balance to OA-7",
+      "quantity": "220000"
+    },
+    {
+      "id": "si_07",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2022-06-30",
       "security_id": "stock_issuance_07",
-      "quantity": "100000",
-      "price": { "amount": "0.0001", "currency": "USD" },
-      "balance_security_id": "",
-      "comments": [],
-      "consideration_text": "Repurchasing 100,000 shares for the full amount"
+      "custom_id": "OA-7",
+      "stakeholder_id": "fionaFounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryA",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "80000",
+      "stock_legend_ids": []
     }
   ]
 }
