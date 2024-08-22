@@ -1,5 +1,13 @@
 import {OcfMachineContext} from '../../ocfMachine';
 
+/*
+CURRENT CHECKS:
+A stock issuance with a corresponding security ID must exist for the security_id variable
+The date of the stock issuance referred to in the security_id must have a date equal to or earlier than the date of the stock acceptance
+MISSING CHECKS:
+The given stock issuance must not have a stock retraction transaction associated with it
+*/
+
 const valid_tx_stock_acceptance = (context: OcfMachineContext, event: any) => {
   const {transactions} = context.ocfPackageContent;
 
