@@ -1,5 +1,17 @@
 import {OcfMachineContext} from '../../ocfMachine';
 
+/*
+CURRENT CHECKS:
+A stock issuance with a corresponding security ID must exist for the security_id variable
+The date of the stock issuance referred to in the security_id must have a date equal to or earlier than the date of the stock reissuance
+
+MISSING CHECKS
+Any stock issuances with corresponding security IDs referred to in the resulting_security_ids array must exist
+The security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
+The dates of any stock issuances referred to in the resulting_security_ids variable must have a date equal to the date of the stock reissuance
+The quantity of the stock issuance referred to in the security_id variable must equal the sum of the quantities of any stock issuances referred to in the resulting_security_ids variable
+The stock_class_id of the stock issuance referred to in the security_id variable must equal the stock_class_id of any stock issuances referred to in the resulting_security_ids variable
+*/
 const valid_tx_stock_reissuance = (context: OcfMachineContext, event: any) => {
   let valid = false;
   const {transactions} = context.ocfPackageContent;

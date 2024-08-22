@@ -1,6 +1,15 @@
 import {OcfMachineContext} from '../../ocfMachine';
 
-// Reference for tx_stock_issuance transaction: https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/StockIssuance/
+/*
+CURRENT CHECKS:
+A stakeholder with a corresponding stakeholder ID must exist
+A stock class with corresponding stock class ID must exist
+MISSING CHECKS:
+If a stock legend ID included, a stock legend with a corresponding stock legend ID must exist
+The quantity of the Stock issuance is equal to or less than the current number of shares authorised at class level (If applicable) minus any outstanding Stock issuances
+*/
+
+// Refrence for tx_stock_issuance transaction: https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/StockIssuance/
 
 const valid_tx_stock_issuance = (context: OcfMachineContext, event: any) => {
   let valid = false;

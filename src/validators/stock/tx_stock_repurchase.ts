@@ -1,5 +1,18 @@
 import {OcfMachineContext} from '../../ocfMachine';
 
+/*
+CURRENT CHECKS:
+A stock issuance with a corresponding security ID must exist for the security_id variable
+The date of the stock issuance referred to in the security_id must have a date equal to or earlier than the date of the stock repurchase
+If applicable, a stock issuance with a corresponding security ID must exist for the balance_security_id variable
+The dates of a stock issuance referred to in the balance_security_id variables must have a date equal to the date of the stock repurchase
+The quantity variable must be greater than zero and the quantity of the stock_issuance referred to in security_id variable
+The quantity of the stock issuance referred to in the balance_security_id variable must be equal to the quantity of the stock issuance referred to in the security_id variable minus the quantity variable
+MISSING CHECKS:
+The security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
+The stock_class_id of the stock issuance in the balance_security_id variable must be the same as the stock_class_id of the stock issuance reffered to in the security_id variable
+*/
+
 const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   let valid = false;
   // TBC: validation of tx_stock_repurchase
