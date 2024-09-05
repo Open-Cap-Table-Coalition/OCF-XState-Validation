@@ -6,6 +6,7 @@ export type OcfPackageContent = {
   stakeholders: any;
   stockClasses: any;
   transactions: any;
+  stockLegends: any;
 };
 
 type file = {
@@ -45,10 +46,20 @@ export const readManifest = (manifestPath: string): OcfPackageContent => {
     );
   });
 
+  const stockLegends: any[] = [];
+  manifest.stock_legend_templates_files.forEach((file: file) => {
+    stockLegends.push(
+      ...JSON.parse(
+        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+      ).items
+    );
+  });
+
   return {
     manifest,
     stakeholders,
     stockClasses,
     transactions,
+    stockLegends,
   };
 };
