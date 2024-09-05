@@ -4,7 +4,7 @@ import {readManifest} from './helpers/manifest';
 import ocfMachine, {OcfMachineContext} from './ocfMachine';
 
 const manifestPath =
-  process.argv[2] || './src/test_data/test_company/manifest.ocf.json';
+  process.argv[2] || './src/test_data/test_company/Manifest.ocf.json';
 
 const ocfPackageContent = readManifest(manifestPath);
 

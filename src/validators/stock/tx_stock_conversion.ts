@@ -9,7 +9,7 @@ Any stock issuances with corresponding security IDs referred to in the resulting
 If applicable, a stock issuance with a corresponding security ID must exist for the balance_security_id variable"
 The security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
 The dates of any stock issuances referred to in the resulting_security_ids or balance_security_id variables must have a date equal to the date of the stock conversion
-The quantity_converted variable must be between 1 and the quantity of the stock_issuance referred to in security_id variable
+The quantity_converted variable must be greater than zero and the quantity of the stock_issuance referred to in security_id variable
 The quantity_converted variable must equal the sum of any stock issuances referred to in the resulting_security_ids variable
 The quantity of the stock issuance referred to in the balance_security_id variable must be equal to the quantity of the stock issuance referred to in the security_id variable minus the quantity_converted variable
 The stock class id of the stock issuances in the resulting_security_id variable must be different from the stock_class_id of the stock issuance referred to in the security_id variable

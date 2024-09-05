@@ -12,6 +12,8 @@ import {OcfMachineContext} from '../../ocfMachine';
     7. If there is a balance issuance, is the date of transaction the same day as the date of the balance issuance?
     8. Does the sum of the quantities of the resulting issuances equal to the quantity of the transfer?
     9. Does the sum of the quantities of the resulting issuances (and the balance issuance if it exists) equal the quantity of the incoming issuance?
+    MISSING CHECKS:
+    1. The security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
 */
 
 const valid_tx_stock_transfer = (context: OcfMachineContext, event: any) => {
