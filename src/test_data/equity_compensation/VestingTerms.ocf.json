@@ -325,9 +325,9 @@
         ]
     },
     {
-        "id": "four_year_monthly_one_year_cliff_cumulative_rounding",
+        "id": "four_year_monthly_one_year_cliff_cumulative_round_down",
         "object_type": "VESTING_TERMS",
-        "name": "Four Year / One Year Cliff - Cumulative Rounding",
+        "name": "Four Year / One Year Cliff - Cumulative Round Down",
         "description": "25% of the total number of shares shall vest on the one-year anniversary of this Agreement, and an additional 1/48th of the total number of Shares shall then vest on the corresponding day of each month thereafter, until all of the Shares have been released on the fourth anniversary of this Agreement.",
         "allocation_type": "CUMULATIVE_ROUND_DOWN",
         "vesting_conditions": [
