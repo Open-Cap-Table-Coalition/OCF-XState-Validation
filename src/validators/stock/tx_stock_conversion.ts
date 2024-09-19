@@ -4,7 +4,6 @@ import {OcfMachineContext} from '../../ocfMachine';
 CURRENT CHECKS:
 1. Check that stock issuance in incoming security_id referenced by transaction exists in current state.
 2. The date of the stock issuance referred to in the security_id must have a date equal to or earlier than the date of the stock conversion
-MISSING CHECKS:
 3. Any stock issuances with corresponding security IDs referred to in the resulting_security_ids array must exist
 4. If applicable, a stock issuance with a corresponding security ID must exist for the balance_security_id variable
 5. The stock_class_id of the stock issance in the balance_security_id must be the same as the stock_class_id of the stock issuance reffered to in the security_id variable
@@ -16,7 +15,8 @@ MISSING CHECKS:
 11. The stock class id of the stock issuances in the resulting_security_id variable must be different from the stock_class_id of the stock issuance referred to in the security_id variable
 12. The stakeholder_id of the stock issuance referred to in the security_id variable must equal the stakeholder_id of any stock issuances referred to in the resulting_security_ids variable
 13. The stakeholder_id of the stock issuance referred to in the security_id variable must equal the stakeholder_id of the balance_security_id variable
-Not implemented:
+
+NOT IMPLEMENTED:
 The quantity_converted variable must equal the sum of any stock issuances referred to in the resulting_security_ids variable
 */
 
