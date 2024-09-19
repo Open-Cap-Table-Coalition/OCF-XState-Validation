@@ -57,7 +57,7 @@ const valid_tx_stock_issuance = (context: OcfMachineContext, event: any) => {
       '\x1b[92m\u2714 This issuance does not have a stock legend.\x1b[0m'
     );
   } else {
-    event.data.stock_lengend_ids.forEach((ele: any) => {
+    event.data.stock_legend_ids.forEach((ele: any) => {
       stockLegend_validity = false;
       stockLegends.forEach((ele2: any) => {
         if (ele2.id === ele) {

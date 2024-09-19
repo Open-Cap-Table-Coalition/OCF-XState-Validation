@@ -590,7 +590,7 @@ const ocfMachine: any = {
                 'Custom ID': issuance.custom_id,
                 'Convertible holder': issuance.stakeholder_id,
                 'Issue Date': issuance.date,
-                'Investment Amount': `${issuance.investment_amount.amount} ${issuance.investment_amount.currency}`,
+                'Investment Amount': `${issuance.purchase_price.amount} ${issuance.purchase_price.currency}`,
               });
             });
             if (convertible_table.length > 0) {
@@ -605,7 +605,7 @@ const ocfMachine: any = {
                 'Custom ID': issuance.custom_id,
                 'Warrant holder': issuance.stakeholder_id,
                 'Issue Date': issuance.date,
-                'Investment Amount': `${issuance.investment_amount.amount} ${issuance.investment_amount.currency}`,
+                'Investment Amount': `${issuance.purchase_price.amount} ${issuance.purchase_price.currency}`,
               });
             });
             if (warrant_table.length > 0) {
