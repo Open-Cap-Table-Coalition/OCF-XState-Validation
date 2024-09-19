@@ -12,6 +12,12 @@
       "object_type": "STAKEHOLDER",
       "name": { "legal_name": "Charlie Chuck Cofounder" },
       "stakeholder_type": "INDIVIDUAL"
+    },
+    {
+      "id": "janeCTO",
+      "object_type": "STAKEHOLDER",
+      "name": { "legal_name": "Jane Eyre CTO" },
+      "stakeholder_type": "INDIVIDUAL"
     }
   ]
 }
