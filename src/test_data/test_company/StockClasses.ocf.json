@@ -17,7 +17,7 @@
       "name": "Ordinary B",
       "class_type": "COMMON",
       "default_id_prefix": "OB",
-      "initial_shares_authorized": "0",
+      "initial_shares_authorized": "5000000",
       "votes_per_share": "1",
       "seniority": "1"
     },
@@ -27,7 +27,7 @@
       "name": "Preferred",
       "class_type": "PREFERRED",
       "default_id_prefix": "P",
-      "initial_shares_authorized": "0",
+      "initial_shares_authorized": "350000",
       "votes_per_share": "1",
       "seniority": "1"
     }
