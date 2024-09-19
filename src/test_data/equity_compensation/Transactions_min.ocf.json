@@ -1,0 +1,36 @@
+{
+  "file_type": "OCF_TRANSACTIONS_FILE",
+  "items": [
+        {
+      "id": "eci_08",
+      "object_type": "TX_EQUITY_COMPENSATION_ISSUANCE",
+      "date": "2019-06-01",
+      "security_id": "equity_compensation_issuance_08",
+      "custom_id": "EC-8",
+      "stakeholder_id": "emilyEmployee",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryB",
+      "stock_plan_id": "stock_plan_01",
+      "quantity": "2000",
+      "exercise_price": {"amount": "0.1", "currency": "USD"},
+      "compensation_type": "OPTION",
+      "option_grant_type": "INTL",
+      "expiration_date": "2030-05-31",
+      "termination_exercise_windows": [
+        {
+          "reason": "VOLUNTARY_GOOD_CAUSE",
+          "period": 3,
+          "period_type": "MONTHS"
+        }
+      ],
+      "vesting_terms_id": "four_year_monthly_one_year_cliff_cumulative_round_down"
+    },
+    {
+      "object_type": "TX_VESTING_START",
+      "id": "eci_vs_08",
+      "security_id": "equity_compensation_issuance_08",
+      "vesting_condition_id": "start_condition",
+      "date": "2019-06-01"
+    }
+  ]
+}

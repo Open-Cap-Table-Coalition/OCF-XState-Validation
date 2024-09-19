@@ -2,15 +2,6 @@
   "file_type": "OCF_TRANSACTIONS_FILE",
   "items": [
     {
-      "id": "st_01",
-      "object_type": "TX_STOCK_TRANSFER",
-      "date": "2022-06-15",
-      "security_id": "stock_issuance_02",
-      "quantity": "300000",
-      "resulting_security_ids": ["stock_issuance_03"],
-      "balance_security_id": "stock_issuance_04"
-    },
-    {
       "id": "si_01",
       "object_type": "TX_STOCK_ISSUANCE",
       "date": "2022-01-01",
@@ -22,6 +13,15 @@
       "share_price": { "amount": "0.0001", "currency": "USD" },
       "quantity": "600000",
       "stock_legend_ids": []
+    },
+    {
+      "id": "st_01",
+      "object_type": "TX_STOCK_TRANSFER",
+      "date": "2022-06-15",
+      "security_id": "stock_issuance_02",
+      "quantity": "300000",
+      "resulting_security_ids": ["stock_issuance_03"],
+      "balance_security_id": "stock_issuance_04"
     },
     {
       "id": "si_01_acceptance",

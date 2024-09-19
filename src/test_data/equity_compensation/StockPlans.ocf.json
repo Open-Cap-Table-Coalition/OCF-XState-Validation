@@ -1,0 +1,13 @@
+{
+  "file_type": "OCF_STOCK_PLANS_FILE",
+  "items": [
+    {
+      "id": "stock_plan_01",
+      "object_type": "STOCK_PLAN",
+      "board_approval_date": "2020-09-12",
+      "initial_shares_reserved": "1000000",
+      "plan_name": "2020 Equity Incentive Plan",
+      "stock_class_id": "ordinaryB"
+    }
+  ]
+}
