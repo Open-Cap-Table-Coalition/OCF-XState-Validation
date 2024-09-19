@@ -235,7 +235,8 @@
         "Here is another comment"
       ],
       "balance_security_id": "stock_issuance_preferred_balance_from_01"
-
+    },
+    {
       "id": "sib_1",
       "object_type": "TX_STOCK_ISSUANCE",
       "date": "2023-01-01",
