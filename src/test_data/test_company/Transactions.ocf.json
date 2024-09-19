@@ -169,6 +169,73 @@
       "reason_text": "This stock should never have been issued!"
     },
     {
+      "id": "si_preferred_01",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2023-01-01",
+      "security_id": "stock_issuance_preferred_01",
+      "custom_id": "P-01",
+      "stakeholder_id": "fionaFounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "preferred",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "35000",
+      "stock_legend_ids": []
+    },
+    {
+      "id": "si_preferred_02",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2023-06-01",
+      "security_id": "stock_issuance_preferred_balance_from_01",
+      "custom_id": "P-02",
+      "stakeholder_id": "fionaFounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "preferred",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "15000",
+      "stock_legend_ids": []
+    },
+    {
+      "id": "si_11",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2023-06-01",
+      "security_id": "stock_issuance_11",
+      "custom_id": "OA-11",
+      "stakeholder_id": "fionaFounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryA",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "30000",
+      "stock_legend_ids": []
+    },
+    {
+      "id": "si_12",
+      "object_type": "TX_STOCK_ISSUANCE",
+      "date": "2023-06-01",
+      "security_id": "stock_issuance_12",
+      "custom_id": "OA-12",
+      "stakeholder_id": "fionaFounder",
+      "security_law_exemptions": [],
+      "stock_class_id": "ordinaryA",
+      "share_price": { "amount": "0.0001", "currency": "USD" },
+      "quantity": "10000",
+      "stock_legend_ids": []
+    },
+    {
+      "id": "stock_conversion_01",
+      "object_type": "TX_STOCK_CONVERSION",
+      "security_id": "stock_issuance_preferred_01",
+      "date": "2023-06-01",
+      "resulting_security_ids": [
+        "stock_issuance_11",
+        "stock_issuance_12"
+      ],
+      "quantity_converted": "20000",
+      "comments": [
+        "Here is a comment",
+        "Here is another comment"
+      ],
+      "balance_security_id": "stock_issuance_preferred_balance_from_01"
+
       "id": "sib_1",
       "object_type": "TX_STOCK_ISSUANCE",
       "date": "2023-01-01",
