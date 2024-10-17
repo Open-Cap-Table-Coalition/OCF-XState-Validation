@@ -1,5 +1,11 @@
+/**
+ * Use the following command to test:
+ * npm run generate-schedule ../test_data/generate-schedule-data.ts '2021-11-15'
+ */
 const generateSchedule = () => {
   const vesting_schedule_table: any[] = [];
+
+  // 1. Grab the incoming data from the file
 
   const dataPath = process.argv[2] || '../test_data/generate-schedule-data.ts';
   const {
@@ -8,13 +14,17 @@ const generateSchedule = () => {
     vestingTermsData,
     exercise_transactions,
   } = require(dataPath);
+
+  // 2. Initialize the variables to be used in the loop
   let nextVestingCondition: any;
   let totalVested = 0;
   let totalUnvested: any = equity_compensation_issuance.quantity;
 
+  // 3. Initialize the event date and the vesting condition id
   let eventDate = new Date(vesting_start.date);
   let vestingConditionId = vesting_start.vesting_condition_id;
 
+  // 4. Calculate any upfront vesting in the start condition
   vestingTermsData.vesting_conditions.forEach((vestingCondition: any) => {
     if (vestingCondition.id === vestingConditionId) {
       if (vestingCondition.portion.numerator) {
@@ -27,7 +37,7 @@ const generateSchedule = () => {
         totalUnvested -= amountVested;
         vesting_schedule_table.push({
           Date: eventDate.toISOString().split('T')[0],
-          'Event Type': 'Vesting',
+          'Event Type': 'Vesting Start',
           'Remaining to Vest': totalUnvested,
           'Cumulative Vested': totalVested,
           //'Condition Id': vestingConditionId,
@@ -37,6 +47,7 @@ const generateSchedule = () => {
     }
   });
 
+  // 5. Calculate the vesting schedule for the next condidtion ID
   vestingConditionId = nextVestingCondition;
 
   vestingTermsData.vesting_conditions.forEach((vestingCondition: any) => {
@@ -245,16 +256,16 @@ const generateSchedule = () => {
           }
         }
 
+        // Check if there is a cliff and update the vesting schedule accordingly.
         if (vestingCondition.cliff_condition) {
-          let cliffAmount = 0;
           for (
             let i = 1;
             i <= vestingCondition.cliff_condition.period.length;
             i++
           ) {
             if (i < vestingCondition.cliff_condition.period.length) {
-              cliffAmount = vesting_schedule_table[1].quantity;
               vesting_schedule_table.splice(1, 1);
+              vesting_schedule_table[1]['Event Type'] = 'Cliff';
             }
           }
         }
@@ -264,6 +275,7 @@ const generateSchedule = () => {
     }
   });
 
+  // Calculate the exercise transactions and update the vesting schedule accordingly
   if (exercise_transactions.length > 0) {
     const sorted_transactions = exercise_transactions.sort(
       (
@@ -301,7 +313,6 @@ const generateSchedule = () => {
               vesting_schedule_table[i]['Cumulative Vested'] -
               cumulativeExercised;
             cumulativeExercised += parseFloat(transaction.quantity);
-            console.log('Amount Exercised: ', cumulativeExercised);
             vesting_schedule_table.splice(i + 1, 0, {
               Date: transaction.date,
               'Event Type': 'Exercise',
@@ -338,6 +349,7 @@ const generateSchedule = () => {
       } else {
         cumulativeExercised += parseFloat(transaction.quantity);
         vesting_schedule_table.push({
+          Date: transaction.date,
           'Event Type': 'Exercise',
           'Remaining to Vest': 0,
           'Cumulative Vested':
@@ -355,6 +367,7 @@ const generateSchedule = () => {
   }
   console.table(vesting_schedule_table);
 
+  // If a specific analysis date is provided, calculate the amount vested, unvested, available to exercise, and exercised to date.
   const analysisDate = process.argv[3] ? process.argv[3] : null;
 
   if (analysisDate) {
@@ -380,8 +393,8 @@ const generateSchedule = () => {
       {
         'Analysis Date: ': analysisDate,
         'Amount Unvested: ': amountUnvested,
-        'Amount Vested To Date: ': amountVested,
-        'Amount Exercised To Date: ': amountExercised,
+        'Amount Vested to Date: ': amountVested,
+        'Amount Exercised to Date: ': amountExercised,
         'Amount Available to Exercise: ': amountAvailable,
       },
     ]);

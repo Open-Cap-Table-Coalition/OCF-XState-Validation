@@ -59,6 +59,7 @@ export const vestingTermsData = {
         },
         relative_to_condition_id: 'start_condition',
       },
+      // cliff_condition variable is not in current OCF schema and is recommended as a non-breaking change to correctly calculate the vesting schedule
       cliff_condition: {
         id: 'cliff_condition',
         description: 'Cliff payout at 12 month',
@@ -103,6 +104,14 @@ export const exercise_transactions = [
     date: '2023-06-01',
     security_id: 'equity_compensation_issuance_01',
     resulting_security_ids: ['share_issuance_03'],
-    quantity: '1100',
+    quantity: '750',
+  },
+  {
+    id: 'EXERCISE_04',
+    object_type: 'TX_EQUITY_COMPENSATION_EXERCISE',
+    date: '2023-06-15',
+    security_id: 'equity_compensation_issuance_01',
+    resulting_security_ids: ['share_issuance_04'],
+    quantity: '350',
   },
 ];
