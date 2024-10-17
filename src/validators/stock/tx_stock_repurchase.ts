@@ -30,13 +30,13 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   let valid = false;
   // TBC: validation of tx_stock_repurchase
   const {transactions} = context.ocfPackageContent;
-  let incoming_stockClass='';
+  let incoming_stockClass = '';
   // 1. Check that stock issuance in incoming security_id referenced by transaction exists in current state.
   let incoming_stockIssuance_validity = false;
   context.stockIssuances.forEach((ele: any) => {
     if (ele.security_id === event.data.security_id) {
       incoming_stockIssuance_validity = true;
-      incoming_stockClass=ele.stock_class_id;
+      incoming_stockClass = ele.stock_class_id;
       console.log(
         `\x1b[92m\u2714 The incoming security (${event.data.security_id}) for this repurchase exists.\x1b[0m`
       );
@@ -69,7 +69,7 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   let balance_stockIssuance_validity = true;
   let balance_security_outgoing_date_validity = true;
   let balance_stockClass_validity = true;
-  let balance_quantity_validity=true
+  let balance_quantity_validity = true;
 
   if (event.data.balance_security_id) {
     // 3. Check that stock issuance for the balance security_id referenced by transaction exists in current state.
@@ -82,7 +82,7 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
         balance_stockIssuance_validity = true;
         balance_security_outgoing_date_validity = false;
         balance_stockClass_validity = false;
-        balance_quantity_validity=false;
+        balance_quantity_validity = false;
         console.log(
           `\x1b[92m\u2714 The balance security (${event.data.balance_security_id}) for this repurchase exists.\x1b[0m`
         );
@@ -101,14 +101,14 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
           );
         }
         // 6. Check that the quantity of the balance security_id if it exists is greater than 0
-        if (parseFloat(ele.quantity)>0) {
+        if (parseFloat(ele.quantity) > 0) {
           balance_quantity_validity = true;
           console.log(
             `\x1b[92m\u2714 The quantity of the balance security (${event.data.balance_security_id}) is greater than 0.\x1b[0m`
           );
         }
       }
-    });  
+    });
   }
 
   if (!balance_stockIssuance_validity) {
@@ -166,13 +166,16 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   }
 
   // 8. Check repurchase amount is greater than 0 and less than or equal to the incoming security quantity
-  let repurchase_quantity_validity=false
+  let repurchase_quantity_validity = false;
   transactions.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
       ele.object_type === 'TX_STOCK_ISSUANCE'
     ) {
-      if (parseFloat(ele.quantity) >= parseFloat(event.data.quantity) && parseFloat(event.data.quantity)>0) {
+      if (
+        parseFloat(ele.quantity) >= parseFloat(event.data.quantity) &&
+        parseFloat(event.data.quantity) > 0
+      ) {
         repurchase_quantity_validity = true;
         console.log(
           `\x1b[92m\u2714 The quantity of this repurchase is greater than 0 and less than or equal to the quantity of the incoming security (${event.data.security_id}).\x1b[0m`
@@ -187,14 +190,14 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   }
 
   //9. Check that the security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
-  let only_transaction_validity=true;
+  let only_transaction_validity = true;
   transactions.map((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
-      ele.object_type !== 'TX_STOCK_ISSUANCE' && 
-      ele.object_type !== 'TX_STOCK_ACCEPTANCE' && 
-      !(ele.object_type === 'TX_STOCK_REPURCHASE' && ele.id===event.data.id))
-    {
+      ele.object_type !== 'TX_STOCK_ISSUANCE' &&
+      ele.object_type !== 'TX_STOCK_ACCEPTANCE' &&
+      !(ele.object_type === 'TX_STOCK_REPURCHASE' && ele.id === event.data.id)
+    ) {
       only_transaction_validity = false;
       console.log(
         `\x1b[91m\u2718 The incoming security (${event.data.security_id}) for this repurchase is related to another transaction (${ele.object_type}) with id (${ele.id}).\x1b[0m`
@@ -204,7 +207,7 @@ const valid_tx_stock_repurchase = (context: OcfMachineContext, event: any) => {
   if (only_transaction_validity) {
     console.log(
       `\x1b[92m\u2714 The incoming security (${event.data.security_id}) for this repurchase is not related to any other conflicting transaction.\x1b[0m`
-    ); 
+    );
   }
 
   if (

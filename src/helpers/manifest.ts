@@ -49,31 +49,36 @@ export const readManifest = (manifestPath: string): OcfPackageContent => {
   });
 
   const vestingTerms: any[] = [];
-  manifest.vesting_terms_files.forEach((file: file) => {
-    vestingTerms.push(
-      ...JSON.parse(
-        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
-      ).items
-    );
-  });
-
+  if (manifest.vesting_terms) {
+    manifest.vesting_terms_files.forEach((file: file) => {
+      vestingTerms.push(
+        ...JSON.parse(
+          fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+        ).items
+      );
+    });
+  }
   const stockPlans: any[] = [];
-  manifest.stock_plans_files.forEach((file: file) => {
-    stockPlans.push(
-      ...JSON.parse(
-        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
-      ).items
-    );
-  });
-  const stockLegends: any[] = [];
-  manifest.stock_legend_templates_files.forEach((file: file) => {
-    stockLegends.push(
-      ...JSON.parse(
-        fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
-      ).items
-    );
-  });
+  if (manifest.stock_plans_files) {
+    manifest.stock_plans_files.forEach((file: file) => {
+      stockPlans.push(
+        ...JSON.parse(
+          fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+        ).items
+      );
+    });
+  }
 
+  const stockLegends: any[] = [];
+  if (manifest.stock_legend_templates_files) {
+    manifest.stock_legend_templates_files.forEach((file: file) => {
+      stockLegends.push(
+        ...JSON.parse(
+          fs.readFileSync(path.join(manifestDir, file.filepath), 'utf8')
+        ).items
+      );
+    });
+  }
   return {
     manifest,
     stakeholders,

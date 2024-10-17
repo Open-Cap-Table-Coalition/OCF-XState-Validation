@@ -27,8 +27,8 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
   // 1. Check that stock issuance in incoming security_id referenced by transaction exists in current state.
   let incoming_stockIssuance_validity = false;
   let incoming_stockClass = '';
-  let incoming_quantity=0;
-  let incoming_stakeholder='';
+  let incoming_quantity = 0;
+  let incoming_stakeholder = '';
   context.stockIssuances.forEach((ele: any) => {
     if (
       ele.security_id === event.data.security_id &&
@@ -37,7 +37,7 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
       incoming_stockIssuance_validity = true;
       incoming_stockClass = ele.stock_class_id;
       incoming_quantity = ele.quantity;
-      incoming_stakeholder=ele.stakeholder_id;
+      incoming_stakeholder = ele.stakeholder_id;
       console.log(
         `\x1b[92m\u2714 The incoming security (${event.data.security_id}) for this conversion exists.\x1b[0m`
       );
@@ -120,7 +120,10 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
           );
         }
         // 6. The quantity of the stock issuance referred to in the balance_security_id variable must be equal to the quantity of the stock issuance referred to in the security_id variable minus the quantity_converted variable
-        if (ele.quantity == (incoming_quantity-event.data.quantity_converted)) {
+        if (
+          ele.quantity ===
+          incoming_quantity - event.data.quantity_converted
+        ) {
           balance_quantity_validity = true;
           console.log(
             `\x1b[92m\u2714 The quantity of the stock issuance referred to in the balance_security_id (${event.data.balance_security_id}) is equal to the quantity of the stock being converted minus the quantity converted.\x1b[0m`
@@ -168,7 +171,7 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
       `\x1b[91m\u2718 The stakeholder of this converted stock is not the same as the stakeholder of the balance security (${event.data.balance_security_id}).\x1b[0m`
     );
   }
- 
+
   // 8. The security_id of the stock issuance referred to in the security_id variable must not be the security_id related to any other transactions with the exception of a stock acceptance transaction.
   let only_transaction_validity = true;
   transactions.map((ele: any) => {
@@ -196,7 +199,11 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
     const res = event.data.resulting_security_ids[i];
     resulting_dates_validity = false;
     transactions.map((ele: any) => {
-      if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE' && ele.date === event.data.date) {
+      if (
+        ele.security_id === res &&
+        ele.object_type === 'TX_STOCK_ISSUANCE' &&
+        ele.date === event.data.date
+      ) {
         resulting_dates_validity = true;
         console.log(
           `\x1b[92m\u2714 The date of this conversion is the same as the date of the resulting security (${res}).\x1b[0m`
@@ -212,8 +219,11 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
   }
 
   // 10. The quantity_converted variable must be greater than zero and the quantity of the stock_issuance referred to in security_id variable
-  let conversion_quantity_validity=false
-  if (incoming_quantity >= parseFloat(event.data.quantity_converted) && parseFloat(event.data.quantity_converted)>0) {
+  let conversion_quantity_validity = false;
+  if (
+    incoming_quantity >= parseFloat(event.data.quantity_converted) &&
+    parseFloat(event.data.quantity_converted) > 0
+  ) {
     conversion_quantity_validity = true;
     console.log(
       `\x1b[92m\u2714 The quantity converted (${event.data.quantity_converted}) of this transaction is greater than 0 and less than or equal to the quantity of the incoming security (${event.data.security_id}).\x1b[0m`
@@ -231,7 +241,11 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
     const res = event.data.resulting_security_ids[i];
     resulting_stock_class_validity = false;
     transactions.map((ele: any) => {
-      if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE' && ele.stock_class_id !== incoming_stockClass) {
+      if (
+        ele.security_id === res &&
+        ele.object_type === 'TX_STOCK_ISSUANCE' &&
+        ele.stock_class_id !== incoming_stockClass
+      ) {
         resulting_stock_class_validity = true;
         console.log(
           `\x1b[92m\u2714 The stock class of the resulting security (${res}) is different than stock class of the stock issuance being converted.\x1b[0m`
@@ -253,7 +267,7 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
     resulting_stakeholder_validity = false;
     transactions.map((ele: any) => {
       if (ele.security_id === res && ele.object_type === 'TX_STOCK_ISSUANCE') {
-        if (ele.stakeholder_id == incoming_stakeholder) {
+        if (ele.stakeholder_id === incoming_stakeholder) {
           resulting_stakeholder_validity = true;
           console.log(
             `\x1b[92m\u2714 The stakeholder of this converted stock is the same as the stakeholder of the resulting security (${res}).\x1b[0m`
@@ -269,7 +283,8 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
     }
   }
 
-  if (incoming_stockIssuance_validity && 
+  if (
+    incoming_stockIssuance_validity &&
     incoming_date_validity &&
     resulting_stockIssuances_validity &&
     balance_stockIssuance_validity &&
@@ -281,7 +296,8 @@ const valid_tx_stock_conversion = (context: OcfMachineContext, event: any) => {
     conversion_quantity_validity &&
     resulting_stock_class_validity &&
     resulting_stakeholder_validity &&
-    balance_security_outgoing_validity) {
+    balance_security_outgoing_validity
+  ) {
     valid = true;
   }
 
