@@ -1,15 +1,128 @@
 import * as fs from "fs";
 import * as path from "path";
 
+// ideally we'll eventually import these from OCF
+interface VestingConditions_VestingScheduleRelative {
+  id: string;
+  description: string;
+  portion: {
+    numerator: string
+    denominator: string
+    remainder: boolean
+  };
+  quantity: string;
+  trigger: {
+    type: 'VESTING_START_DATE' | 'VESTING_SCHEDULE_ABSOLUTE' | 'VESTING_SCHEDULE_RELATIVE' | 'VESTING_EVENT';
+    period: {
+      length: number,
+      type: 'DAYS',
+      occurrences: number
+    } | {
+      length: number,
+      type: 'MONTHS',
+      occurrences: number,
+      day_of_month: '01' | '02' | '03' | '04' | '05' | '06' | '07' | '08' | '09' | '10' | '11' | '12' | '13' | '14' | '15' | '16' | '17' | '18' | '19' | '20' | '21' | '22' | '23' | '24' | '25' | '26' | '27' | '28' | '29_OR_LAST_DAY_OF_MONTH' | '30_OR_LAST_DAY_OF_MONTH' | '31_OR_LAST_DAY_OF_MONTH' | 'VESTING_START_DAY_OR_LAST_DAY_OF_MONTH';
+      relative_to_condition_id: string;
+    };
+    relative_to_condition_id: string;
+  };
+  next_condition_ids: string[];
+  cliff_condition?: {
+    id: string;
+    description: string;
+    period: {
+      type: string;
+      length: number;
+    }
+  } // this isn't part of the schema yet
+}
+
+interface VestingTerms {
+  id: string;
+  comments: string[];
+  object_type: 'VESTING_TERMS';
+  name: string;
+  allocation_type: 'CUMULATIVE_ROUNDING' | 'CUMULATIVE_ROUND_DOWN' | 'FRONT_LOADED' | 'BACK_LOADED' | 'FRONT_LOADED_TO_SINGLE_TRANCHE' | 'BACK_LOADED_TO_SINGLE_TRANCHE' | 'FRACTIONAL'
+  vesting_conditions: VestingConditions_VestingScheduleRelative[]
+}
+
+export interface TX_Vesting_Start {
+  id: string;
+  comments: string[];
+  object_type: 'TX_VESTING_START';
+  date: string;
+  security_id: string;
+  vesting_condition_id: string
+}
+
+interface Valuation {
+  id: string;
+  comments: string[];
+  object_type: 'VALUATION';
+  provider: string;
+  board_approval_date: string;
+  stockholder_approval_date: string;
+  price_per_share: {
+    amount: string;
+    currency: string;
+  };
+  effective_date: string;
+  stock_class_id: string;
+  valuation_type: '409A';
+}
+
+export interface TX_Equity_Compensation_Issuance {
+  id: string;
+  comments: string[];
+  object_type: 'TX_PLAN_SECURITY_ISSUANCE' | 'TX_EQUITY_COMPENSATION_ISSUANCE';
+  date: string;
+  security_id: string;
+  custom_id: string;
+  stakeholder_id: string;
+  board_approval_date: string;
+  stockholder_approval_date: string;
+  consideration_text: string;
+  security_law_exemptions: {
+    description: string;
+    jurisdiction: string;
+  }
+  stock_plan_id: string;
+  stock_class_id: string;
+  compensation_type: 'OPTION_NSO' | 'OPTION_ISO' | 'OPTION' | 'RSU' | 'CSAR' | 'SSAR';
+  option_grant_type: 'NSO' | 'ISO' | 'INTL';
+  quantity: string;
+  exercise_price: {
+    amount: string;
+    currency: string;
+  };
+  base_price: {
+    amount: string;
+    currency: string;
+  };
+  early_exercisable: boolean;
+  vesting_terms_id: string;
+  vestings: {
+    date: string;
+    amount: string;
+  }[];
+  expiration_date: string | null;
+  termination_exercise_windows: {
+    reason: 'VOLUNTARY_OTHER' | 'VOLUNTARY_GOOD_CAUSE' | 'VOLUNTARY_RETIREMENT' | 'INVOLUNTARY_OTHER' | 'INVOLUNTARY_DEATH' | 'INVOLUNTARY_DISABILITY' | 'INVOLUNTARY_WITH_CAUSE';
+    period: number;
+    period_type: 'DAYS' | 'MONTHS' | 'YEARS';
+  }[];
+  valuation_id: string // this isn't part of the schema yet
+}
+
 export interface OcfPackageContent {
   manifest: any;
   stakeholders: any;
   stockClasses: any;
-  transactions: any;
+  transactions: Array<TX_Equity_Compensation_Issuance | TX_Vesting_Start>;
   stockLegends: any;
   stockPlans: any;
-  vestingTerms: any;
-  valuations: any;
+  vestingTerms: VestingTerms[];
+  valuations: Valuation[];
 };
 
 interface file {
@@ -30,12 +143,12 @@ export const readOcfPackage = (packagePath: string): OcfPackageContent => {
     stockClasses.push(...JSON.parse(fs.readFileSync(path.join(packagePath, file.filepath), "utf8")).items);
   });
 
-  const transactions: any[] = [];
+  const transactions: TX_Equity_Compensation_Issuance[] = [];
   manifest.transactions_files.forEach((file: file) => {
     transactions.push(...JSON.parse(fs.readFileSync(path.join(packagePath, file.filepath), "utf8")).items);
   });
 
-  const vestingTerms: any[] = [];
+  const vestingTerms: VestingTerms[] = [];
   manifest.vesting_terms_files.forEach((file: file) => {
     vestingTerms.push(...JSON.parse(fs.readFileSync(path.join(packagePath, file.filepath), "utf8")).items);
   });
@@ -50,7 +163,7 @@ export const readOcfPackage = (packagePath: string): OcfPackageContent => {
     stockLegends.push(...JSON.parse(fs.readFileSync(path.join(packagePath, file.filepath), "utf8")).items);
   });
 
-  const valuations: any[] = [];
+  const valuations: Valuation[] = [];
   manifest.valuations_files.forEach((file: file) => {
     valuations.push(...JSON.parse(fs.readFileSync(path.join(packagePath, file.filepath), "utf8")).items);
   });

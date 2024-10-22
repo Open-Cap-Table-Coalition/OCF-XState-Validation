@@ -1,168 +1,80 @@
-import { OcfPackageContent, readOcfPackage } from "../read_ocf_package";
+import { OcfPackageContent, readOcfPackage, TX_Equity_Compensation_Issuance } from "../read_ocf_package";
 import { generateSchedule, VestingSchedule } from "../vesting_schedule_generator";
 
+const ANNUAL_CAPACITY = 100000
+
 // Define the interface for the vesting schedule entries
-interface VestingScheduleWithYearAndGrantId extends VestingSchedule {
-  Grant: string; // Represents the grant ID
+interface Installment extends VestingSchedule {
+  GrantId: string; // Represents the grant ID
   Year: number; // Represents the year
+  FMV: number; // for now we assume that the FMV is the exercise price if there is no valuation.id.  Better approaches to be discussed.
+  Grant_Type: 'NSO' | 'ISO' | 'INTL';
 }
 
-const addYearAndGrantId = (vestingSchedule: VestingSchedule[], issuanceId: string): VestingScheduleWithYearAndGrantId[] => {
+const createInstallment = (vestingSchedule: VestingSchedule[], issuanceId: string, FMV: number, grantType: 'NSO' | 'ISO' | 'INTL'): Installment[] => {
   return vestingSchedule.map((entry) => {
     const date = new Date(entry.Date);
     return {
       ...entry,
-      Grant: issuanceId,
+      GrantId: issuanceId,
       Year: date.getFullYear(),
+      FMV: FMV,
+      Grant_Type: grantType
     };
   });
-};
-
-interface GrantsByYear {
-  Grant: string;
-  Year: number;
-  TotalAmountVested: number;
-  FMV: number;
-  VestedValue: number;
-}
-// Function to sum the amounts by year
-const sumByYear = (vestingSchedule: VestingScheduleWithYearAndGrantId[]): GrantsByYear[] => {
-  // Create an empty object to store the sums by year
-  const result: { [key: number]: number } = {};
-
-  // Iterate through the array
-  vestingSchedule.forEach((entry) => {
-    if (entry["Event Type"] !== "Exercise") {
-      const year = entry.Year;
-      const amount = entry["Event Quantity"];
-
-      // If the year is already in the result, add the amount
-      if (result[year]) {
-        result[year] += amount;
-      } else {
-        // Otherwise, set the initial amount for the year
-        result[year] = amount;
-      }
-    }
-  });
-
-  // Convert the result object into an array of objects for displaying
-  const resultTable = Object.keys(result).map((yearString) => {
-    const year = parseInt(yearString, 10); // Convert the key back to a number
-    return {
-      Grant: vestingSchedule[0].Grant,
-      Year: year,
-      TotalAmountVested: result[year],
-      FMV: 0,
-      VestedValue: 0,
-    };
-  });
-
-  return resultTable;
 };
 
 // Define the interface for the result structure
-interface VestingDataWithCapacity extends GrantsByYear {
+interface ISONSOTestResult extends Installment {
+  ISOShares: number
+  NSOShares: number
   CapacityUsed: number;
   CapacityRemaining: number;
 }
 
-// Function to calculate capacity
-function calculateCapacity(vestingData: GrantsByYear[], capacityPerYear: number): VestingDataWithCapacity[] {
-  const result: VestingDataWithCapacity[] = [];
-  let remainingCapacity = capacityPerYear;
-  let currentYear = vestingData[0].Year; // Initialize the current year to the year of the first row
+// Function to run the ISO test for each vesting installment
+function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
+  let remainingCapacity = ANNUAL_CAPACITY;
+  let currentYear = installments[0].Year; // Initialize the current year to the year of the first row
 
-  vestingData.forEach((row) => {
+
+  const result = installments.reduce((acc, current) => {
     // If the year changes, reset the remaining capacity to the full capacity for the new year
-    if (row.Year !== currentYear) {
-      remainingCapacity = capacityPerYear;
-      currentYear = row.Year; // Update the current year
+    if (current.Year !== currentYear) {
+      remainingCapacity = ANNUAL_CAPACITY;
+      currentYear = current.Year; // Update the current year
     }
 
-    // Determine how much capacity is used in this row
-    const usedCapacity = Math.min(row.VestedValue, remainingCapacity);
+    // Determine how many shares that first became exercisable are ISO eligible
+    const ISOEligibleShares = current.Grant_Type === 'ISO' ? current["Became Exercisable"] : 0
+    
+    // Determine how many shares can be ISOs based on the remainingCapacity
+    const MaxISOShares = Math.floor(remainingCapacity / current.FMV)
+
+    // Determine how many shares are ISOs
+    const ISOShares = Math.min(MaxISOShares, ISOEligibleShares);
+
+    // Determine how many shares are NSOs
+    const NSOShares = current["Became Exercisable"] - ISOShares
+
+    // Determine how much capacity was utilized
+    const usedCapacity = ISOShares * current.FMV
 
     // Update remaining capacity after usage
     remainingCapacity -= usedCapacity;
 
-    // Add Capacity Used and Capacity Remaining to the row
-    result.push({
-      ...row,
+
+    acc.push({
+      ...current,
+      ISOShares: ISOShares,
+      NSOShares: NSOShares,
       CapacityUsed: usedCapacity,
       CapacityRemaining: remainingCapacity,
     });
-  });
 
-  return result;
-}
+    return acc
 
-// Define the interface for the result structure with ISO Shares and NSO Shares
-interface VestingDataWithShares extends VestingDataWithCapacity {
-  ISOShares: number;
-  NSOShares: number;
-}
-
-// Function to add ISO Shares and NSO Shares to the vesting data
-function addSharesColumns(vestingData: VestingDataWithCapacity[]): VestingDataWithShares[] {
-  return vestingData.map((row) => {
-    const isoShares = Math.round(row.CapacityUsed / row.FMV);
-    const nsoShares = Math.round((row.VestedValue - row.CapacityUsed) / row.FMV);
-
-    return {
-      ...row,
-      ISOShares: isoShares,
-      NSOShares: nsoShares,
-    };
-  });
-}
-
-interface VestingDataWithISO extends VestingScheduleWithYearAndGrantId {
-  ISO: number;
-  ISORemaining: number;
-  NSO: number;
-}
-
-// Function to add ISO Used, ISO Remaining, and NSO columns
-function addISOColumns(vestingData: VestingScheduleWithYearAndGrantId[], isoData: VestingDataWithShares[]): VestingDataWithISO[] {
-  const result: VestingDataWithISO[] = [];
-  const isoRemainingByGrantAndYear: { [key: string]: number } = {};
-
-  for (let i = 0; i < vestingData.length; i++) {
-    // Get the corresponding ISO share information for the grant and year
-    const isoInfo = isoData.find((iso) => iso.Grant === vestingData[i].Grant && iso.Year === vestingData[i].Year);
-
-    if (!isoInfo) {
-      throw new Error(`ISO data not found for Grant ${vestingData[i].Grant} and Year ${vestingData[i].Year}`);
-    }
-
-    const grantYearKey = `${vestingData[i].Grant}-${vestingData[i].Year}`;
-
-    // Initialize ISO Remaining at the start of the year
-    if (!(grantYearKey in isoRemainingByGrantAndYear)) {
-      isoRemainingByGrantAndYear[grantYearKey] = isoInfo.ISOShares;
-    }
-
-    // Calculate ISO Used as the minimum of Amount Vested and ISO Remaining
-    const isoUsed = Math.min(vestingData[i]["Event Quantity"], isoRemainingByGrantAndYear[grantYearKey]);
-
-    // Calculate NSO if ISO Remaining is zero
-    const nso = isoRemainingByGrantAndYear[grantYearKey] === 0 ? vestingData[i]["Event Quantity"] : Math.max(0, vestingData[i]["Event Quantity"] - isoUsed);
-
-    // Update ISO Remaining
-    const isoRemaining = isoRemainingByGrantAndYear[grantYearKey] - isoUsed;
-
-    // Store the updated ISO Remaining for the next rows in the same year
-    isoRemainingByGrantAndYear[grantYearKey] = isoRemaining;
-
-    // Add the row with the new ISO and NSO columns
-    result.push({
-      ...vestingData[i],
-      ISO: isoUsed,
-      NSO: nso,
-      ISORemaining: isoRemaining,
-    });
-  }
+  }, [] as ISONSOTestResult[]);
 
   return result;
 }
@@ -172,50 +84,26 @@ export const isoNsoCalculator = (packagePath: string, stakeholderId: string, cap
 
   const valuations = ocfPackage.valuations;
   const transactions = ocfPackage.transactions;
-  const equityCompensationIssuances: any[] = transactions.filter((transaction: any) => transaction.stakeholder_id === stakeholderId && transaction.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE");
+  const equityCompensationIssuances = transactions.filter((transaction: any) => transaction.stakeholder_id === stakeholderId && (transaction.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE" || transaction.object_type === 'TX_PLAN_SECURITY_ISSUANCE')) as TX_Equity_Compensation_Issuance[] | undefined;
 
-  if (equityCompensationIssuances.length === 0) {
+  if (!equityCompensationIssuances || equityCompensationIssuances.length === 0) {
     throw new Error("No equity compensation issuances found for stakeholder");
   }
 
   const sortedIssuances = equityCompensationIssuances.sort((a: { date: string }, b: { date: string }) => a.date.localeCompare(b.date));
 
-  const combinedYearTable: any[] = [];
-  const combinedGrants: any[] = [];
-  let vestedByYearTable: any[] = [];
+  const installmentsTable = sortedIssuances.reduce((acc, current) => {
+    const vestingSchedule = generateSchedule(packagePath, current.security_id)
+    const valuation = valuations.find(valuation => valuation.id === current.valuation_id)
+    const FMV = valuation?.price_per_share.amount ?? current.exercise_price.amount // for now we'll assume the exercise price is the FMV if there is no valuation.  Better approaches to be discussed.
+    const grant_type = current.option_grant_type
+    const installments = createInstallment(vestingSchedule, current.id, parseFloat(FMV), grant_type)
+    acc.push(...installments)
+    return acc
+  }, [] as Installment[])
 
-  sortedIssuances.forEach((issuance: any) => {
-    const vestingSchedule = generateSchedule(packagePath, issuance.security_id);
-    const vestingScheduleWithYearAndGrantId = addYearAndGrantId(vestingSchedule, issuance.id);
-    combinedGrants.push(vestingScheduleWithYearAndGrantId);
-    vestedByYearTable = sumByYear(vestingScheduleWithYearAndGrantId);
 
-    valuations.forEach((valuation: any) => {
-      if (valuation.id === issuance.valuation_id) {
-        for (let i = 0; i < vestedByYearTable.length; i++) {
-          vestedByYearTable[i]["FMV"] = parseFloat(valuation.price_per_share.amount);
-          vestedByYearTable[i]["VestedValue"] = vestedByYearTable[i]["FMV"] * vestedByYearTable[i]["TotalAmountVested"];
-        }
-      }
-    });
-
-    combinedYearTable.push(...vestedByYearTable);
-  });
-
-  combinedYearTable.sort((a, b) => a.Year - b.Year);
-
-  const updatedVestingData = calculateCapacity(combinedYearTable, capacity);
-  // Add ISO and NSO shares
-  const updatedVestingDataWithShares = addSharesColumns(updatedVestingData);
-
-  const sortedByGrant = updatedVestingDataWithShares.sort((a: { Grant: string }, b: { Grant: string }) => a.Grant.localeCompare(b.Grant));
-
-  let result: any[][] = [];
-  combinedGrants.forEach((grant: any) => {
-    const updatedVestingData = addISOColumns(grant, sortedByGrant);
-
-    result.push(updatedVestingData);
-  });
+  const result = calculateCapacity(installmentsTable);
 
   return result;
 };
