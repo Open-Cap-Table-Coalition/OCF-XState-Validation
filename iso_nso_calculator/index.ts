@@ -1,4 +1,5 @@
-import { OcfPackageContent, readOcfPackage, TX_Equity_Compensation_Issuance } from "../read_ocf_package";
+import { util } from "prettier";
+import { OcfPackageContent, readOcfPackage, TX_Equity_Compensation_Issuance, Valuation } from "../read_ocf_package";
 import { generateSchedule, VestingSchedule } from "../vesting_schedule_generator";
 
 const ANNUAL_CAPACITY = 100000
@@ -6,29 +7,51 @@ const ANNUAL_CAPACITY = 100000
 // Define the interface for the vesting schedule entries
 interface Installment extends VestingSchedule {
   GrantId: string; // Represents the grant ID
+  Grant_Date: string;
   Year: number; // Represents the year
   FMV: number; // for now we assume that the FMV is the exercise price if there is no valuation.id.  Better approaches to be discussed.
   Grant_Type: 'NSO' | 'ISO' | 'INTL';
 }
 
-const createInstallment = (vestingSchedule: VestingSchedule[], issuanceId: string, FMV: number, grantType: 'NSO' | 'ISO' | 'INTL'): Installment[] => {
-  return vestingSchedule.map((entry) => {
+
+const createInstallments = (packagePath: string, issuance: TX_Equity_Compensation_Issuance, FMV: number): Installment[] => {
+  
+  const vestingSchedule = generateSchedule(packagePath, issuance.security_id)
+
+  const result = vestingSchedule.reduce((acc, entry) => {
+    if (entry["Event Type"] === 'Exercise') return acc
     const date = new Date(entry.Date);
-    return {
+    acc.push({
       ...entry,
-      GrantId: issuanceId,
-      Year: date.getFullYear(),
-      FMV: FMV,
-      Grant_Type: grantType
-    };
-  });
+        GrantId: issuance.id,
+        Grant_Date: entry.Date,
+        Year: date.getFullYear(),
+        FMV: FMV,
+        Grant_Type: issuance.option_grant_type
+    })
+    return acc
+  }, [] as Installment[])
+  
+  return result
 };
 
+const getFMV = (issuance: TX_Equity_Compensation_Issuance, valuations: Valuation[]) => {
+  const valuation = valuations.find(valuation => valuation.id === issuance.valuation_id)
+  const FMV = valuation?.price_per_share.amount ?? issuance.exercise_price.amount // for now we'll assume the exercise price is the FMV if there is no valuation.  Better approaches to be discussed.
+  return parseFloat(FMV)
+}
+
+const sortInstallments = (installments: Installment[]) => {
+  const result = installments.sort((a: { Grant_Date: string}, b: { Grant_Date: string }) => a.Grant_Date.localeCompare(b.Grant_Date))
+  return result
+}
+
 // Define the interface for the result structure
-interface ISONSOTestResult extends Installment {
+interface ISONSOTestResult extends Pick<Installment, 'Year' | 'Date' | 'GrantId' | 'Event Type' | 'FMV'> {
+  StartingCapacity: number,
   ISOShares: number
   NSOShares: number
-  CapacityUsed: number;
+  CapacityUtilized: number;
   CapacityRemaining: number;
 }
 
@@ -45,6 +68,8 @@ function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
       currentYear = current.Year; // Update the current year
     }
 
+    const startingCapacity = remainingCapacity
+
     // Determine how many shares that first became exercisable are ISO eligible
     const ISOEligibleShares = current.Grant_Type === 'ISO' ? current["Became Exercisable"] : 0
     
@@ -58,17 +83,21 @@ function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
     const NSOShares = current["Became Exercisable"] - ISOShares
 
     // Determine how much capacity was utilized
-    const usedCapacity = ISOShares * current.FMV
+    const utilizedCapacity = ISOShares * current.FMV
 
     // Update remaining capacity after usage
-    remainingCapacity -= usedCapacity;
-
+    remainingCapacity -= utilizedCapacity;
 
     acc.push({
-      ...current,
+      Year: current.Year,
+      Date: current.Date,
+      GrantId: current.GrantId,
+      "Event Type": current["Event Type"],
+      FMV: current.FMV,
+      StartingCapacity: startingCapacity,
       ISOShares: ISOShares,
       NSOShares: NSOShares,
-      CapacityUsed: usedCapacity,
+      CapacityUtilized: utilizedCapacity,
       CapacityRemaining: remainingCapacity,
     });
 
@@ -78,6 +107,7 @@ function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
 
   return result;
 }
+
 
 export const isoNsoCalculator = (packagePath: string, stakeholderId: string): ISONSOTestResult[] => {
   const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
@@ -90,20 +120,16 @@ export const isoNsoCalculator = (packagePath: string, stakeholderId: string): IS
     throw new Error("No equity compensation issuances found for stakeholder");
   }
 
-  const sortedIssuances = equityCompensationIssuances.sort((a: { date: string }, b: { date: string }) => a.date.localeCompare(b.date));
-
-  const installmentsTable = sortedIssuances.reduce((acc, current) => {
-    const vestingSchedule = generateSchedule(packagePath, current.security_id)
-    const valuation = valuations.find(valuation => valuation.id === current.valuation_id)
-    const FMV = valuation?.price_per_share.amount ?? current.exercise_price.amount // for now we'll assume the exercise price is the FMV if there is no valuation.  Better approaches to be discussed.
-    const grant_type = current.option_grant_type
-    const installments = createInstallment(vestingSchedule, current.id, parseFloat(FMV), grant_type)
+  const allInstallments = equityCompensationIssuances.reduce((acc, issuance) => {
+    const FMV = getFMV(issuance, valuations)
+    const installments = createInstallments(packagePath, issuance, FMV)
     acc.push(...installments)
     return acc
   }, [] as Installment[])
 
+  const sortedInstallments = sortInstallments(allInstallments)
 
-  const result = calculateCapacity(installmentsTable);
+  const result = calculateCapacity(sortedInstallments);
 
   return result;
 };

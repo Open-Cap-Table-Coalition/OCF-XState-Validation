@@ -55,7 +55,7 @@ export interface TX_Vesting_Start {
   vesting_condition_id: string
 }
 
-interface Valuation {
+export interface Valuation {
   id: string;
   comments: string[];
   object_type: 'VALUATION';

@@ -3,7 +3,7 @@ import type { TX_Vesting_Start, TX_Equity_Compensation_Issuance } from "../read_
 
 export interface VestingSchedule {
   Date: string;
-  "Event Type": string;
+  "Event Type": 'Start' | 'Cliff' | 'Vesting' | 'Exercise';
   "Event Quantity": number;
   "Remaining Unvested": number;
   "Cumulative Vested": number;
@@ -190,7 +190,7 @@ export const generateSchedule = (packagePath: string, equityCompensationIssuance
           vestingSchedule[i]['Available to Exercise'] = availableToExercise;
           
         } else 
-        if (Date.parse(vestingSchedule[i].Date) <= Date.parse(transaction.date) && Date.parse(vestingSchedule[i + 1].Date) > Date.parse(transaction.date) && vestingSchedule[i]["Event Type"] !== "Exercise Event") {
+        if (Date.parse(vestingSchedule[i].Date) <= Date.parse(transaction.date) && Date.parse(vestingSchedule[i + 1].Date) > Date.parse(transaction.date) && vestingSchedule[i]["Event Type"] !== "Exercise") {
           vestingSchedule[i]["Available to Exercise"] = vestingSchedule[i]["Cumulative Vested"] - cumulativeExercised;
           const amountExercised = parseFloat(transaction.quantity);
           cumulativeExercised += amountExercised;
