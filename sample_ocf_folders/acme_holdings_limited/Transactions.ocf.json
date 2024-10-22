@@ -348,10 +348,10 @@
       "security_law_exemptions": [],
       "stock_class_id": "ordinaryB",
       "stock_plan_id": "stock_plan_01",
-      "quantity": "36000",
-      "exercise_price": { "amount": "0.1", "currency": "USD" },
+      "quantity": "360000",
+      "exercise_price": { "amount": "1.0", "currency": "USD" },
       "compensation_type": "OPTION",
-      "option_grant_type": "INTL",
+      "option_grant_type": "ISO",
       "expiration_date": "2030-05-31",
       "termination_exercise_windows": [
         {
@@ -373,10 +373,10 @@
       "security_law_exemptions": [],
       "stock_class_id": "ordinaryB",
       "stock_plan_id": "stock_plan_01",
-      "quantity": "48000",
-      "exercise_price": { "amount": "0.1", "currency": "USD" },
+      "quantity": "480000",
+      "exercise_price": { "amount": "5.0", "currency": "USD" },
       "compensation_type": "OPTION",
-      "option_grant_type": "INTL",
+      "option_grant_type": "ISO",
       "expiration_date": "2030-05-31",
       "termination_exercise_windows": [
         {
@@ -398,10 +398,10 @@
       "security_law_exemptions": [],
       "stock_class_id": "ordinaryB",
       "stock_plan_id": "stock_plan_01",
-      "quantity": "24000",
-      "exercise_price": { "amount": "0.1", "currency": "USD" },
+      "quantity": "240000",
+      "exercise_price": { "amount": "7.0", "currency": "USD" },
       "compensation_type": "OPTION",
-      "option_grant_type": "INTL",
+      "option_grant_type": "ISO",
       "expiration_date": "2030-05-31",
       "termination_exercise_windows": [
         {
