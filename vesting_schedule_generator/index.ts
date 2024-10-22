@@ -161,13 +161,21 @@ export const generateSchedule = (packagePath: string, equityCompensationIssuance
   }
 
   if (currentVestingCondition.cliff_condition) {
-    for (let i = 1; i <= currentVestingCondition.cliff_condition.period.length; i++) {
-      let cliffAmountVested: number = 0;
-      if (i < currentVestingCondition.cliff_condition.period.length) {
-        vestingSchedule.splice(1, 1);
+    const cliffLength = currentVestingCondition.cliff_condition.period.length
 
+    for (let i = 1; i <= cliffLength; i++) {
+
+      // remove all installments prior to the vesting cliff
+      // we start at 1 because 0 is the "Start" event
+      if (i < cliffLength) {
+        vestingSchedule.splice(1, 1);
+      }
+
+      // convert the cliff installment into a "Cliff" event
+      if (i === cliffLength) {
         vestingSchedule[1]["Event Type"] = "Cliff";
         vestingSchedule[1]["Event Quantity"] = vestingSchedule[1]["Cumulative Vested"];
+        vestingSchedule[1]["Became Exercisable"] = vestingSchedule[1]["Available to Exercise"]
       }
     }
   }
