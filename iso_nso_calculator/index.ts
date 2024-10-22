@@ -79,7 +79,7 @@ function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
   return result;
 }
 
-export const isoNsoCalculator = (packagePath: string, stakeholderId: string, capacity: number): any => {
+export const isoNsoCalculator = (packagePath: string, stakeholderId: string): any => {
   const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
 
   const valuations = ocfPackage.valuations;
