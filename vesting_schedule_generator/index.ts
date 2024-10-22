@@ -42,8 +42,8 @@ export const generateSchedule = (packagePath: string, equityCompensationIssuance
   let unvested: number = equityCompensationQuantity;
   let vested: number = 0;
 
-  const EARLY_EXERCISABLE: boolean = equityCompensationIssuance.early_exercisable
-  let availableToExercise: number = equityCompensationQuantity & +EARLY_EXERCISABLE
+  const EARLY_EXERCISABLE = equityCompensationIssuance.early_exercisable
+  let availableToExercise: number = equityCompensationQuantity * +EARLY_EXERCISABLE
 
   let currentVestingCondition = equityCompensationVestingTerms.vesting_conditions.find((vestingCondition: any) => vestingCondition.id === vestingConditionId);
 
@@ -59,9 +59,8 @@ export const generateSchedule = (packagePath: string, equityCompensationIssuance
   vested += amountVested;
   unvested -= amountVested;
 
-  // increment availableToExercise only if the option is not early exercisable
-  const becameExercisable = amountVested * +!EARLY_EXERCISABLE
-  availableToExercise += becameExercisable  
+  // designate entire option as exercisable at the "Start" event if the option is early exercisable
+  const becameExercisable = availableToExercise
 
   vestingSchedule.push({
     Date: transactionDate.toISOString().split("T")[0],
@@ -175,7 +174,9 @@ export const generateSchedule = (packagePath: string, equityCompensationIssuance
       if (i === cliffLength) {
         vestingSchedule[1]["Event Type"] = "Cliff";
         vestingSchedule[1]["Event Quantity"] = vestingSchedule[1]["Cumulative Vested"];
-        vestingSchedule[1]["Became Exercisable"] = vestingSchedule[1]["Available to Exercise"]
+
+        // increment available to exercise only if the option is not early exercisable
+        vestingSchedule[1]["Became Exercisable"] = EARLY_EXERCISABLE ? 0 : vestingSchedule[1]["Available to Exercise"]
       }
     }
   }
