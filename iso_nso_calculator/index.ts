@@ -47,7 +47,7 @@ const sortInstallments = (installments: Installment[]) => {
 }
 
 // Define the interface for the result structure
-interface ISONSOTestResult extends Pick<Installment, 'Year' | 'Date' | 'GrantId' | 'Event Type' | 'FMV'> {
+interface ISONSOTestResult extends Pick<Installment, 'Year' | 'Date' | 'GrantId' | 'Event Type' | 'Event Quantity' | 'FMV'> {
   StartingCapacity: number,
   ISOShares: number
   NSOShares: number
@@ -93,6 +93,7 @@ function calculateCapacity(installments: Installment[]): ISONSOTestResult[] {
       Date: current.Date,
       GrantId: current.GrantId,
       "Event Type": current["Event Type"],
+      "Event Quantity": current["Event Quantity"],
       FMV: current.FMV,
       StartingCapacity: startingCapacity,
       ISOShares: ISOShares,
