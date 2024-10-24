@@ -30,7 +30,7 @@ const createInstallments = (packagePath: string, issuance: TX_Equity_Compensatio
     acc.push({
       ...entry,
         GrantId: issuance.id,
-        Grant_Date: entry.Date,
+        Grant_Date: issuance.date,
         Year: date.getFullYear(),
         FMV: FMV,
         Grant_Type: issuance.option_grant_type
