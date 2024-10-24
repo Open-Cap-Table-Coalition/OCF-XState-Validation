@@ -317,7 +317,7 @@ export const ocfMachine: any = {
               }),
               assign({
                 convertibleIssuances: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
-                  [...context.stockIssuances, event.data],
+                  [...context.convertibleIssuances, event.data],
               }),
             ],
             target: "capTable",
@@ -508,7 +508,7 @@ export const ocfMachine: any = {
               }),
               assign({
                 warrantIssuances: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
-                  [...context.stockIssuances, event.data],
+                  [...context.warrantIssuances, event.data],
               }),
             ],
             target: "capTable",
@@ -699,7 +699,7 @@ export const ocfMachine: any = {
               }),
               assign({
                 equityCompensation: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
-                  [...context.stockIssuances, event.data],
+                  [...context.equityCompensation, event.data],
               }),
             ],
             target: "capTable",
