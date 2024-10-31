@@ -3,8 +3,8 @@ import { generateSchedule, VestingSchedule } from "../vesting_schedule_generator
 
 // Define the interface for the vesting schedule entries
 interface VestingScheduleWithYearAndGrantId extends VestingSchedule {
-  Grant: string; // Represents the grant ID
   Year: number; // Represents the year
+  Grant: string; // Represents the grant ID
 }
 
 const addYearAndGrantId = (vestingSchedule: VestingSchedule[], issuanceId: string): VestingScheduleWithYearAndGrantId[] => {
@@ -12,8 +12,8 @@ const addYearAndGrantId = (vestingSchedule: VestingSchedule[], issuanceId: strin
     const date = new Date(entry.Date);
     return {
       ...entry,
-      Grant: issuanceId,
       Year: date.getFullYear(),
+      Grant: issuanceId,
     };
   });
 };
@@ -117,10 +117,14 @@ function addSharesColumns(vestingData: VestingDataWithCapacity[]): VestingDataWi
   });
 }
 
-interface VestingDataWithISO extends VestingScheduleWithYearAndGrantId {
-  ISO: number;
-  ISORemaining: number;
-  NSO: number;
+interface VestingDataWithISO {
+  Year: number,
+  Grant: string;
+  FMV: number;
+  Date: string;
+  "Event Type": string;
+  "ISO Shares": number;
+  "NSO Shares": number;
 }
 
 // Function to add ISO Used, ISO Remaining, and NSO columns
@@ -128,6 +132,7 @@ function addISOColumns(vestingData: VestingScheduleWithYearAndGrantId[], isoData
   const result: VestingDataWithISO[] = [];
   const isoRemainingByGrantAndYear: { [key: string]: number } = {};
 
+  
   for (let i = 0; i < vestingData.length; i++) {
     // Get the corresponding ISO share information for the grant and year
     const isoInfo = isoData.find((iso) => iso.Grant === vestingData[i].Grant && iso.Year === vestingData[i].Year);
@@ -138,30 +143,34 @@ function addISOColumns(vestingData: VestingScheduleWithYearAndGrantId[], isoData
 
     const grantYearKey = `${vestingData[i].Grant}-${vestingData[i].Year}`;
 
-    // Initialize ISO Remaining at the start of the year
-    if (!(grantYearKey in isoRemainingByGrantAndYear)) {
-      isoRemainingByGrantAndYear[grantYearKey] = isoInfo.ISOShares;
+    if (vestingData[i]["Event Type"] !== "Exercise") {
+      // Initialize ISO Remaining at the start of the year
+      if (!(grantYearKey in isoRemainingByGrantAndYear)) {
+        isoRemainingByGrantAndYear[grantYearKey] = isoInfo.ISOShares;
+      }
+
+      // Calculate ISO Used as the minimum of Amount Vested and ISO Remaining
+      const isoUsed = Math.min(vestingData[i]["Event Quantity"], isoRemainingByGrantAndYear[grantYearKey]);
+
+      // Calculate NSO if ISO Remaining is zero
+      const nso = isoRemainingByGrantAndYear[grantYearKey] === 0 ? vestingData[i]["Event Quantity"] : Math.max(0, vestingData[i]["Event Quantity"] - isoUsed);
+
+      // Update ISO Remaining
+      const isoRemaining = isoRemainingByGrantAndYear[grantYearKey] - isoUsed;
+
+      // Store the updated ISO Remaining for the next rows in the same year
+      isoRemainingByGrantAndYear[grantYearKey] = isoRemaining;
+      // Add the row with the new ISO and NSO columns
+      result.push({
+        Year: vestingData[i].Year,
+        Grant: vestingData[i].Grant,
+        FMV: isoInfo.FMV,
+        Date: vestingData[i].Date,
+        "Event Type": vestingData[i]["Event Type"],
+        "ISO Shares": isoUsed,
+        "NSO Shares": nso
+      });
     }
-
-    // Calculate ISO Used as the minimum of Amount Vested and ISO Remaining
-    const isoUsed = Math.min(vestingData[i]["Event Quantity"], isoRemainingByGrantAndYear[grantYearKey]);
-
-    // Calculate NSO if ISO Remaining is zero
-    const nso = isoRemainingByGrantAndYear[grantYearKey] === 0 ? vestingData[i]["Event Quantity"] : Math.max(0, vestingData[i]["Event Quantity"] - isoUsed);
-
-    // Update ISO Remaining
-    const isoRemaining = isoRemainingByGrantAndYear[grantYearKey] - isoUsed;
-
-    // Store the updated ISO Remaining for the next rows in the same year
-    isoRemainingByGrantAndYear[grantYearKey] = isoRemaining;
-
-    // Add the row with the new ISO and NSO columns
-    result.push({
-      ...vestingData[i],
-      ISO: isoUsed,
-      NSO: nso,
-      ISORemaining: isoRemaining,
-    });
   }
 
   return result;
@@ -205,6 +214,8 @@ export const isoNsoCalculator = (packagePath: string, stakeholderId: string, cap
   combinedYearTable.sort((a, b) => a.Year - b.Year);
 
   const updatedVestingData = calculateCapacity(combinedYearTable, capacity);
+  console.table(updatedVestingData);
+
   // Add ISO and NSO shares
   const updatedVestingDataWithShares = addSharesColumns(updatedVestingData);
 

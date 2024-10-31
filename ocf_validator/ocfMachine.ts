@@ -508,7 +508,7 @@ export const ocfMachine: any = {
               }),
               assign({
                 warrantIssuances: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
-                  [...context.warrantIssuances, event.data],
+                  [...context.convertibleIssuances, event.data],
               }),
             ],
             target: "capTable",
@@ -855,11 +855,11 @@ export const ocfMachine: any = {
                 report: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
                   [...context.report, validators.valid_tx_equity_compensation_exercise(context, event, false)]
               }),
-              assign({
-                equityCompensation: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
-                  context.equityCompensation.filter((obj: any) => { return obj.security_id !== event.data.security_id; }
-                  ),
-              }),
+              // assign({
+              //   equityCompensation: ({ context, event }: { context: OcfMachineContext; event: OcfMachineEvent }) => 
+              //     context.equityCompensation.filter((obj: any) => { return obj.security_id !== event.data.security_id; }
+              //     ),
+              // }),
 
             ],
           },
