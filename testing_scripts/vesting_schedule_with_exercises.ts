@@ -1,11 +1,14 @@
-import { generateSchedule } from "./vesting_schedule_generator"
+import { VestingScheduleService } from "../vesting_schedule_generator"
+import { OcfPackageContent, readOcfPackage } from "../read_ocf_package";
 
 const packagePath  = './sample_ocf_folders/acme_holdings_limited'
-const equityCompensationIssuanceSecurityId = 'equity_compensation_issuance_03'
+const securityId = 'equity_compensation_issuance_01'
+const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
+const { vestingTerms, transactions } = ocfPackage;
 
 try {
     
-    const schedules = generateSchedule(packagePath, equityCompensationIssuanceSecurityId )
+    const schedules = new VestingScheduleService(vestingTerms, transactions, securityId).getVestingDetails_WithExerices()
 
     const years: number[] = []
     schedules.map((result) => {
@@ -15,6 +18,8 @@ try {
         }
     })
 
+    years.sort((a,b) => a - b)
+
     years.forEach(year => {
         const resultsByYear = schedules.filter(schedule => {
             const vestingYear = new Date(schedule.Date).getFullYear()
@@ -22,7 +27,7 @@ try {
         })
         console.table(resultsByYear)
     })
-    // console.table(schedules)
+    
 } catch (error) {
     if (error instanceof Error) {
         console.error("Error message:", error.message)
