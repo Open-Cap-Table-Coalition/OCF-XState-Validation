@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 // ideally we'll eventually import these from OCF
-interface VestingConditions_VestingScheduleRelative {
+export interface VestingConditions_VestingScheduleRelative {
   id: string;
   description: string;
   portion: {
@@ -37,7 +37,7 @@ interface VestingConditions_VestingScheduleRelative {
   } // this isn't part of the schema yet
 }
 
-interface VestingTerms {
+export interface VestingTerms {
   id: string;
   comments: string[];
   object_type: 'VESTING_TERMS';
@@ -114,11 +114,22 @@ export interface TX_Equity_Compensation_Issuance {
   valuation_id: string // this isn't part of the schema yet
 }
 
+export interface TX_Equity_Compensation_Exercise {
+  id: string;
+  comments: string[];
+  object_type: "TX_EQUITY_COMPENSATION_EXERCISE";
+  date: string;
+  security_id: string;
+  consideration_text: string;
+  resulting_security_ids: string[];
+  quantity: string
+}
+
 export interface OcfPackageContent {
   manifest: any;
   stakeholders: any;
   stockClasses: any;
-  transactions: Array<TX_Equity_Compensation_Issuance | TX_Vesting_Start>;
+  transactions: Array<TX_Equity_Compensation_Issuance | TX_Vesting_Start | TX_Equity_Compensation_Exercise>;
   stockLegends: any;
   stockPlans: any;
   vestingTerms: VestingTerms[];
