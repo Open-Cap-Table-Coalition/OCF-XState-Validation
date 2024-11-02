@@ -1,11 +1,19 @@
-import { isoNsoCalculator } from "./iso_nso_calculator";
+import { ISONSOCalculatorService } from "../iso_nso_calculator"
+import { OcfPackageContent, readOcfPackage } from "../read_ocf_package";
 
 const packagePath  = './sample_ocf_folders/acme_holdings_limited'
 const stakeholderId = 'emilyEmployee'
+const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
+const { vestingTerms, transactions, valuations } = ocfPackage;
 
 try {
     
-    const results = isoNsoCalculator(packagePath, stakeholderId)
+    const results = new ISONSOCalculatorService(
+        stakeholderId,
+        transactions,
+        vestingTerms,
+        valuations
+    ).Results
 
     const years: number[] = []
     results.map((result) => {
