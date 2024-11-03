@@ -8,7 +8,7 @@ const { vestingTerms, transactions } = ocfPackage;
 
 try {
     
-    const schedules = new VestingScheduleService(vestingTerms, transactions, securityId).getVestingDetails()
+    const schedules = new VestingScheduleService(vestingTerms, transactions, securityId).getFullSchedule()
 
     const years: number[] = []
     schedules.map((result) => {
