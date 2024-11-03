@@ -1,16 +1,23 @@
 {
   "name": "ocf-tools",
   "description": "Tool set for the usage and validation of Open Cap Format (OCF) packages",
-  "keywords": ["ocf", "open cap table format"],
+  "keywords": [
+    "ocf",
+    "open cap table format"
+  ],
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "print:vesting_schedule": "ts-node testing_scripts/vesting_schedule.ts",
+    "print:vesting_status": "ts-node testing_scripts/vesting_status",
+    "print:iso_nso_test": "ts-node testing_scripts/iso_nso_test"
   },
   "devDependencies": {
     "@types/node": "^22.7.7",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
   },
   "dependencies": {
