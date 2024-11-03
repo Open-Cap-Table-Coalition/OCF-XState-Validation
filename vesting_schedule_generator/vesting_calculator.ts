@@ -1,5 +1,5 @@
 import { VestingSchedule } from ".";
-import { TX_Vesting_Start, VestingConditions_VestingScheduleRelative, VestingTerms } from "../read_ocf_package";
+import { TX_Vesting_Start, VestingCondition, VestingCondition_VestingScheduleRelative, VestingCondition_VestingStart, VestingTerms } from "../read_ocf_package";
 
 export class VestingCalculatorService {
     private vestingMode!: (
@@ -11,7 +11,7 @@ export class VestingCalculatorService {
     private vested = 0;
     private transactionDate!: Date;
     private vestingConditionId!: string;
-    private currentVestingCondition!: VestingConditions_VestingScheduleRelative;
+    private currentVestingCondition!: VestingCondition;
     private vestingSchedule: VestingSchedule[] = [];
     private hasBeenGenerated: boolean = false;
 
@@ -96,7 +96,7 @@ export class VestingCalculatorService {
       this.vestingConditionId = this.vestingStartTx.vesting_condition_id;
 
       // throw error if no vesting conditions for the provided security id or if the first condition does not have a Vesting_Start_Date trigger
-      const currentVestingCondition = this.issuanceVestingTerms.vesting_conditions.find((vc) => vc.id === this.vestingConditionId)
+      const currentVestingCondition = this.issuanceVestingTerms.vesting_conditions.find((vc): vc is VestingCondition_VestingStart => vc.id === this.vestingConditionId)
       if (!currentVestingCondition) {
         throw new Error(`Vesting conditions for vesting start id ${this.vestingStartTx.id} not found`)
       } else if (currentVestingCondition.trigger.type !== "VESTING_START_DATE") {
@@ -104,7 +104,12 @@ export class VestingCalculatorService {
       }
       this.currentVestingCondition = currentVestingCondition
       
-      const amountVested = (this.quantity * parseFloat(this.currentVestingCondition.portion.numerator)) / parseFloat(this.currentVestingCondition.portion.denominator)
+      const { numerator = "0", denominator = "0" } = this.currentVestingCondition.portion || {}
+      const parsedNumerator = parseFloat(numerator)
+      const parsedDenominator = parseFloat(denominator)
+      const amountVested = parsedDenominator !== 0
+      ? (this.quantity * parsedNumerator) / parsedDenominator
+      : 0
       this.vested += amountVested
       this.unvested -+ amountVested
 
@@ -148,6 +153,11 @@ export class VestingCalculatorService {
 
     private incrementTransactionDate() {
     
+      // this method is only used for relative vesting schedules
+      if (this.currentVestingCondition.trigger.type !== 'VESTING_SCHEDULE_RELATIVE') {
+        throw new Error (`This generator can only calculate for VESTING_SCHEDULE_RELATIVE triggers.`);
+      }
+
       const newDate = new Date(this.transactionDate)
       const {type, length} = this.currentVestingCondition.trigger.period
       
@@ -200,7 +210,7 @@ export class VestingCalculatorService {
       // initialize the currentVestingCondition
       // throw error if the trigger is not VESTING_SCHEDULE_RELATIVE
       this.vestingConditionId = this.currentVestingCondition?.next_condition_ids[0];
-      const currentVestingCondition = this.issuanceVestingTerms.vesting_conditions.find((vc) => vc.id === this.vestingConditionId)
+      const currentVestingCondition = this.issuanceVestingTerms.vesting_conditions.find((vc): vc is VestingCondition_VestingScheduleRelative => vc.id === this.vestingConditionId)
   
       if (!currentVestingCondition || currentVestingCondition.trigger.type !== "VESTING_SCHEDULE_RELATIVE") {
         throw new Error(`This generator can only calculate for VESTING_SCHEDULE_RELATIVE triggers.`);
@@ -209,11 +219,13 @@ export class VestingCalculatorService {
   
       // create array of vesting events
       const occurrencesCount = currentVestingCondition.trigger.period.occurrences
-      const { denominator, numerator } = currentVestingCondition.portion
+      const { denominator = "0", numerator = "0" } = currentVestingCondition.portion || {}
   
       const events = Array.from({ length: occurrencesCount }, (_, index) => {
         this.incrementTransactionDate()
-        const amountVested = this.vestingMode(index, denominator, numerator)
+        const amountVested = parseFloat(denominator) !== 0
+        ? this.vestingMode(index, denominator, numerator)
+        : 0
         this.vested += amountVested
         this.unvested -= amountVested
   
