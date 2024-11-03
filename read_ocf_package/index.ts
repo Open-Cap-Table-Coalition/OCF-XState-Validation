@@ -75,14 +75,7 @@ interface VestingConditionBase {
   quantity?: string;
   next_condition_ids: string[];
   // cliff_condition isn't part of the schema yet
-  cliff_condition?: {
-    id: string;
-    description?: string;
-    period: {
-      type: string;
-      length: number;
-    };
-  };
+  cliff_length?: number;
 }
 
 export interface VestingCondition_VestingStart extends VestingConditionBase {
