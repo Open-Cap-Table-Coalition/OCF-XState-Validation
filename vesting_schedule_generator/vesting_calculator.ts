@@ -164,12 +164,10 @@ export class VestingCalculatorService {
   private handleCliffCondition(cliffLength: number) {
     const scheduleWithCliff = this.vestingSchedule.reduce(
       (acc, schedule, index) => {
-        const cliffIndex = cliffLength - 1;
-
         // always include the "Start" event
         if (index === 0) {
           acc.push(schedule);
-        } else if (index === cliffIndex) {
+        } else if (index === cliffLength) {
           // modify the cliff installment
           const installment: VestingSchedule = {
             ...schedule,
@@ -180,12 +178,12 @@ export class VestingCalculatorService {
           };
 
           acc.push(installment);
-        } else if (index > cliffIndex) {
+        } else if (index > cliffLength) {
           // Include installments that follow the cliff installment unchanged
           acc.push(schedule);
         }
 
-        // skip installments prior to the cliff index
+        // skip installments prior to the cliff length
 
         return acc;
       },
@@ -207,51 +205,39 @@ export class VestingCalculatorService {
 
     const newDate = new Date(this.transactionDate);
     const { type, length } = this.currentVestingCondition.trigger.period;
+    const currentDay = newDate.getUTCDate();
+    const currentMonth = newDate.getUTCMonth();
 
+    newDate.setUTCMonth(currentMonth + length);
+
+    // Manually set the day
     if (type === "MONTHS") {
-      const currentMonth = newDate.getMonth();
-      newDate.setMonth(currentMonth + length);
-
-      // Adjust the day of the month after incrementing the month
-      // const day_of_month = this.currentVestingCondition.trigger.period.day_of_month
-      // switch (day_of_month) {
-      //   case "29_OR_LAST_DAY_OF_MONTH":
-      //   case "30_OR_LAST_DAY_OF_MONTH":
-      //   case "31_OR_LAST_DAY_OF_MONTH":
-      //     this.setDayToLastDayOfMonth(newDate);
-      //     break;
-      //   case 'VESTING_START_DAY_OR_LAST_DAY_OF_MONTH':
-      //     this.setDayToVestingStartOrLast(newDate);
-      //     break;
-      //   default:
-      //     newDate.setDate(parseInt(day_of_month));
-      //     break;
-      // }
+      const day_of_month =
+        this.currentVestingCondition.trigger.period.day_of_month;
+      switch (day_of_month) {
+        case "29_OR_LAST_DAY_OF_MONTH":
+          newDate.setUTCDate(currentDay);
+          if (newDate.getUTCDate() !== 29) newDate.setUTCDate(0); // Set to last day if 29th doesn't exist
+        case "30_OR_LAST_DAY_OF_MONTH":
+          newDate.setUTCDate(currentDay);
+          if (newDate.getUTCDate() !== 30) newDate.setUTCDate(0); // Set to last day if 30th doesn't exist
+        case "31_OR_LAST_DAY_OF_MONTH":
+          newDate.setUTCDate(currentDay);
+          if (newDate.getUTCDate() !== 31) newDate.setUTCDate(0); // Set to last day if 31st doesn't exist
+          break;
+        case "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH":
+          newDate.setUTCDate(currentDay);
+          if (newDate.getUTCDate() !== currentDay) newDate.setUTCDate(0); // Set day to last day if current day doesn't exist
+          break;
+        default:
+          newDate.setUTCDate(currentDay);
+          break;
+      }
     } else if (type === "DAYS") {
-      newDate.setDate(newDate.getDate() + length);
+      newDate.setUTCDate(newDate.getUTCDate() + length);
     }
 
     this.transactionDate = newDate;
-  }
-
-  private setDayToLastDayOfMonth(date: Date) {
-    const nextMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    date.setDate(nextMonth.getDate());
-  }
-
-  private setDayToVestingStartOrLast(date: Date) {
-    const vestingDay = this.transactionDate.getDate();
-    const lastDayOfNewMonth = new Date(
-      date.getFullYear(),
-      date.getMonth() + 1,
-      0
-    ).getDate();
-
-    if (vestingDay > lastDayOfNewMonth) {
-      date.setDate(lastDayOfNewMonth);
-    } else {
-      date.setDate(vestingDay);
-    }
   }
 
   private handleNextVestingCondition() {
@@ -311,7 +297,6 @@ export class VestingCalculatorService {
 
     // handle the cliff condition
     if (currentVestingCondition.cliff_length) {
-      console.log("handling cliff condition");
       this.handleCliffCondition(currentVestingCondition.cliff_length);
     }
   }

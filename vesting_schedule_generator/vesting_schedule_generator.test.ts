@@ -106,4 +106,19 @@ describe("VestingScheduleService", () => {
     );
     expect(vestingEventBeforeCliff).toBeUndefined();
   });
+
+  test("Final total vested should equal original quantity", () => {
+    console.table(fullSchedule);
+    const lastInstallment = fullSchedule[fullSchedule.length - 1];
+    const totalVested = lastInstallment["Cumulative Vested"];
+    const originalQuantity = 4800;
+
+    expect(totalVested).toEqual(originalQuantity);
+  });
+
+  test("Last vesting date should be 2028-05-01", () => {
+    const lastInstallment = fullSchedule[fullSchedule.length - 1];
+    const lastDate = lastInstallment.Date;
+    expect(lastDate).toBe("2028-06-01");
+  });
 });
