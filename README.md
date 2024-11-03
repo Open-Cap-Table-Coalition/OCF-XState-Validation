@@ -73,8 +73,8 @@ to the top of the file you want to use the ocf-tools in.
 
 To test the functionality of the **Vesting Schedule Generator** and the **ISO NSO Calculator** by printing to console, run:
 
-`npx ts-node vesting_scripts/vesting_schedule.ts`,
+`npm run print:vesting_schedule.ts`,
 
-`npx ts-node vesting_scripts/vesting_status.ts`, and
+`npm run print:vesting_status.ts`, and
 
-`npx ts-node vesting_scripts/iso_nso_test.ts`
+`npm run print:iso_nso_test.ts`
