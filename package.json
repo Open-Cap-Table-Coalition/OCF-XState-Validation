@@ -10,7 +10,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "jest",
+    "test": "jest --watch",
     "print:vesting_schedule": "ts-node testing_scripts/vesting_schedule.ts",
     "print:vesting_status": "ts-node testing_scripts/vesting_status",
     "print:iso_nso_test": "ts-node testing_scripts/iso_nso_test"
