@@ -162,25 +162,38 @@ export class VestingCalculatorService {
   }
 
   private handleCliffCondition(cliffLength: number) {
-    // we start at 1 because 0 is the "Start" event
-    for (let i = 1; i <= cliffLength; i++) {
-      // remove all installments prior to the cliff
-      if (i < cliffLength) {
-        this.vestingSchedule.splice(1, 1);
+
+    const scheduleWithCliff = this.vestingSchedule.map((schedule, index) => {
+      const cliffIndex = cliffLength - 1;
+
+      // index 0 is the "Start" event and we leave it alone
+      if (index === 0) {
+        return schedule;
       }
 
-      // convert the cliff installment into a "Cliff" event
-      if (i === cliffLength) {
-        this.vestingSchedule[1]["Event Type"] = "Cliff";
-        this.vestingSchedule[1]["Event Quantity"] =
-          this.vestingSchedule[1]["Cumulative Vested"];
+      // modify the cliff installment
+      if (index === cliffIndex) {
+        const installment: VestingSchedule = {
+          ...schedule,
+          "Event Type": "Cliff",
+          "Event Quantity": schedule["Cumulative Vested"],
+          "Became Exercisable":
+            schedule["Cumulative Vested"] * +!this.EARLY_EXERCISABLE, // increment available to exercise only if the option is not early exercisable
+        };
 
-        // increment available to excercise only if the option is not early exercisable
-        this.vestingSchedule[1]["Became Exercisable"] = this.EARLY_EXERCISABLE
-          ? 0
-          : this.vestingSchedule[1]["Cumulative Vested"];
+        return installment;
       }
-    }
+
+      // don't make any changes to installments that follow the cliff installment
+      if (index > cliffIndex) {
+        return schedule;
+      }
+    });
+
+    // remove undefined corresponding to the installments prior to the cliff
+    this.vestingSchedule = scheduleWithCliff.filter(
+      (installment): installment is VestingSchedule => installment !== undefined
+    );
   }
 
   private incrementTransactionDate() {
@@ -299,6 +312,7 @@ export class VestingCalculatorService {
 
     // handle the cliff condition
     if (currentVestingCondition.cliff_length) {
+      console.log("handling cliff condition");
       this.handleCliffCondition(currentVestingCondition.cliff_length);
     }
   }
