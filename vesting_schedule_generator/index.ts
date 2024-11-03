@@ -41,15 +41,14 @@ export class VestingScheduleService {
       this.vestingTerms,
       this.securityId
     );
-    const { issuance, vestingStartTx, issuanceVestingTerms } =
+    const { tx_issuance, tx_vestingStart, issuanceVestingTerms } =
       this.initializationService.setUpVestingData();
 
     // calculate vesting schedule
     this.calculationService = new VestingCalculatorService(
-      vestingStartTx,
-      issuanceVestingTerms,
-      parseFloat(issuance.quantity),
-      issuance.early_exercisable
+      tx_issuance,
+      tx_vestingStart,
+      issuanceVestingTerms
     );
     (this.vestingSchedule = this.calculationService.generate()),
       // add exercise details to vesting schedule
