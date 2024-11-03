@@ -162,38 +162,37 @@ export class VestingCalculatorService {
   }
 
   private handleCliffCondition(cliffLength: number) {
+    const scheduleWithCliff = this.vestingSchedule.reduce(
+      (acc, schedule, index) => {
+        const cliffIndex = cliffLength - 1;
 
-    const scheduleWithCliff = this.vestingSchedule.map((schedule, index) => {
-      const cliffIndex = cliffLength - 1;
+        // always include the "Start" event
+        if (index === 0) {
+          acc.push(schedule);
+        } else if (index === cliffIndex) {
+          // modify the cliff installment
+          const installment: VestingSchedule = {
+            ...schedule,
+            "Event Type": "Cliff",
+            "Event Quantity": schedule["Cumulative Vested"],
+            "Became Exercisable":
+              schedule["Cumulative Vested"] * +!this.EARLY_EXERCISABLE, // increment available to exercise only if the option is not early exercisable
+          };
 
-      // index 0 is the "Start" event and we leave it alone
-      if (index === 0) {
-        return schedule;
-      }
+          acc.push(installment);
+        } else if (index > cliffIndex) {
+          // Include installments that follow the cliff installment unchanged
+          acc.push(schedule);
+        }
 
-      // modify the cliff installment
-      if (index === cliffIndex) {
-        const installment: VestingSchedule = {
-          ...schedule,
-          "Event Type": "Cliff",
-          "Event Quantity": schedule["Cumulative Vested"],
-          "Became Exercisable":
-            schedule["Cumulative Vested"] * +!this.EARLY_EXERCISABLE, // increment available to exercise only if the option is not early exercisable
-        };
+        // skip installments prior to the cliff index
 
-        return installment;
-      }
-
-      // don't make any changes to installments that follow the cliff installment
-      if (index > cliffIndex) {
-        return schedule;
-      }
-    });
-
-    // remove undefined corresponding to the installments prior to the cliff
-    this.vestingSchedule = scheduleWithCliff.filter(
-      (installment): installment is VestingSchedule => installment !== undefined
+        return acc;
+      },
+      [] as VestingSchedule[]
     );
+
+    this.vestingSchedule = scheduleWithCliff;
   }
 
   private incrementTransactionDate() {
