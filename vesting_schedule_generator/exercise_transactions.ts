@@ -1,5 +1,5 @@
 import { VestingSchedule } from ".";
-import { TX_Equity_Compensation_Exercise } from "../read_ocf_package";
+import { TX_Equity_Compensation_Exercise } from "../types";
 
 export class ExerciseTransactionsService {
   private cumulativeExercised = 0;

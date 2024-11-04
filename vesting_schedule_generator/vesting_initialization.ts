@@ -3,7 +3,7 @@ import {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
   VestingTerms,
-} from "../read_ocf_package";
+} from "../types";
 
 export class VestingInitializationService {
   constructor(

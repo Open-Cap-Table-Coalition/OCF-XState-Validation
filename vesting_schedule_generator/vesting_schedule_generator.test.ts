@@ -4,7 +4,7 @@ import {
   TX_Vesting_Start,
   VestingCondition,
   VestingTerms,
-} from "../read_ocf_package";
+} from "../types";
 
 const vestingConditions: VestingCondition[] = [
   {

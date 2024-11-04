@@ -4,7 +4,7 @@ import type {
   TX_Equity_Compensation_Exercise,
   VestingTerms,
   Valuation,
-} from "../read_ocf_package";
+} from "../types";
 import { ExerciseTransactionsService } from "./exercise_transactions";
 import { VestingCalculatorService } from "./vesting_calculator";
 import { VestingInitializationService } from "./vesting_initialization";
