@@ -161,29 +161,45 @@ export class VestingCalculatorService {
     return this;
   }
 
-  private handleCliffCondition(cliffLength: number) {
+  private handleFirstVestingDate(cliffLength?: number) {
+    const grantDate = new Date(this.tx_issuance.date);
+
+    /**
+     * Determine first vesting date
+     * If no cliff is privided, then treat the first vesting event as the cliff date
+     * If the grant date is after the cliff, then treat the grant date as the cliff, but don't refer to it as a cliff in the result
+     */
+    const cliffIndex = cliffLength ?? 1;
+    const cliffDate = new Date(this.vestingSchedule[cliffIndex].Date);
+    const firstVestingDateIndex =
+      grantDate > cliffDate
+        ? this.vestingSchedule.findIndex(
+            (schedule) => new Date(schedule.Date) >= grantDate
+          )
+        : cliffIndex;
+    const eventType = grantDate > cliffDate ? "Vesting" : "Cliff";
+
     const scheduleWithCliff = this.vestingSchedule.reduce(
       (acc, schedule, index) => {
         // always include the "Start" event
         if (index === 0) {
           acc.push(schedule);
-        } else if (index === cliffLength) {
-          // modify the cliff installment
+        } else if (index === firstVestingDateIndex) {
           const installment: VestingSchedule = {
             ...schedule,
-            "Event Type": "Cliff",
+            "Event Type": eventType,
             "Event Quantity": schedule["Cumulative Vested"],
             "Became Exercisable":
               schedule["Cumulative Vested"] * +!this.EARLY_EXERCISABLE, // increment available to exercise only if the option is not early exercisable
           };
 
           acc.push(installment);
-        } else if (index > cliffLength) {
-          // Include installments that follow the cliff installment unchanged
+        } else if (index > firstVestingDateIndex) {
+          // Include installments that follow the firstVestingDate unchanged
           acc.push(schedule);
         }
 
-        // skip installments prior to the cliff length
+        // skip installments prior to the firstVestingDate
 
         return acc;
       },
@@ -295,10 +311,8 @@ export class VestingCalculatorService {
     // add vesting events to vestingSchedule
     this.vestingSchedule.push(...events);
 
-    // handle the cliff condition
-    if (currentVestingCondition.cliff_length) {
-      this.handleCliffCondition(currentVestingCondition.cliff_length);
-    }
+    // handle the first vesting event
+    this.handleFirstVestingDate(currentVestingCondition.cliff_length);
   }
 
   generate() {
