@@ -6,7 +6,7 @@ import {
   VestingCondition_VestingScheduleRelative,
   VestingCondition_VestingStart,
   VestingTerms,
-} from "../read_ocf_package";
+} from "../types";
 
 export class VestingCalculatorService {
   private vestingMode!: (

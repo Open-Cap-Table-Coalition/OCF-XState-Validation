@@ -4,7 +4,7 @@ import {
   TX_Vesting_Start,
   Valuation,
   VestingTerms,
-} from "../read_ocf_package";
+} from "../types";
 import {
   VestingSchedule,
   VestingScheduleService,
