@@ -4,6 +4,7 @@ import type {
   TX_Equity_Compensation_Exercise,
   VestingTerms,
   Valuation,
+  Transaction,
 } from "../types";
 import { ExerciseTransactionsService } from "./exercise_transactions";
 import { VestingCalculatorService } from "./vesting_calculator";
@@ -28,11 +29,7 @@ export class VestingScheduleService {
 
   constructor(
     private vestingTerms: VestingTerms[],
-    private transactions: (
-      | TX_Equity_Compensation_Issuance
-      | TX_Vesting_Start
-      | TX_Equity_Compensation_Exercise
-    )[],
+    private transactions: Transaction[],
     private securityId: string
   ) {
     // initialize vesting data
