@@ -4,83 +4,137 @@ Version: 0.1.0
 
 Date: 2 November 2024
 
-## Toolset
-
 This toolset provides a growing toolset to help validate and utilize Open Cap Table Format datasets.
 
-Currently, the dataset includes 6 tools:
+Currently, the dataset includes 5 tools:
 
-1. **Read OCF Package**: This tool creates a workable JSON object of the content of an OCF folder from the path of the directory holding the OCF files.
+## Read OCF Package
 
-   ```ts
-   const ocfPackage = readOcfPackage(ocfPackageFolderDir);
-   ```
+This tool creates a workable JSON object of the content of an OCF folder from the path of the directory holding the OCF files.
 
-2. **Vesting Schedule Generator**: This tool creates a JSON array of the vesting periods for a "time standard" (i.e. a schedule in the form of " 4 years monthly" periods ). The tool also calculates and shows exercise transactions for the equity compensation issuance.
+```ts
+const ocfPackage = readOcfPackage(ocfPackageFolderDir);
+```
 
-   The tool can handle any `allocation-type`, any `day_of_month` type, and any upfront vesting or cliff periods. If the vesting commencement date or cliff occurs before the grant date, the grant date is treated as a cliff.
+## Vesting Schedule Generator
 
-   `getFullSchedule()` returns an array of objects:
+This tool creates a JSON array of the vesting periods for a "time standard" (i.e. a schedule in the form of " 4 years monthly" periods ).The tool also calculates and shows exercise transactions for the equity compensation issuance.
 
-   ```typescript
-   {
-      Date: string;
-      "Event Type": "Start" | "Cliff" | "Vesting" | "Exercise";
-      "Event Quantity": number;
-      "Remaining Unvested": number;
-      "Cumulative Vested": number;
-      "Became Exercisable": number;
-      "Cumulative Exercised": number;
-      "Available to Exercise": number;
-   }
-   ```
+The tool can handle any [allocation-type](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/VestingTerms/#object-vesting-terms), any [day_of_month](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/types/vesting/VestingPeriodInMonths/#type-vesting-period-in-months) designation, and any upfront vesting or cliff periods.
 
-   ```typescript
-   const schedule = new VestingScheduleService(
-     vestingTerms,
-     transactions,
-     equityCompensationIssuanceSecurityId
-   ).getFullSchedule();
-   ```
+### 📝 Notes
 
-   `getVestingStatus(checkDateString)` return the object equal to or first to occur following a given date:
+This tool utilizes a `cliff_length` field within the `Vesting_Conditions` object, which is not in the current released version of OCF as of November 2, 2024. [Open-Cap-Table-Format-OCT Issue #514](https://github.com/Open-Cap-Table-Coalition/Open-Cap-Format-OCF/issues/514#issue-2468182057)
 
-   ```typescript
-   const schedule = new VestingScheduleService(
-     vestingTerms,
-     transactions,
-     equityCompensationIssuanceSecurityId
-   ).getVestingStatus(checkDateString);
-   ```
+### 💡Conventions
 
-   Run `npm run print:vesting_schedule.ts`, `npm run print:vesting_status.ts`, and `npm run print:iso_nso_test.ts` in the command line to see the results printed to console.
+If the vesting commencement date or cliff occurs before the grant date, the grant date is treated as a cliff. [OCF-Tools PR #112](https://github.com/Open-Cap-Table-Coalition/OCF-Tools/pull/112)
 
-   **NOTE**: This tool utilizes the concept of a cliff_condition inside the relative time vesting condition which is not in the current released version of OCF as of November 2, 2024.
+If both `vestings` and `vesting_terms_id` are present, `vestings` takes precedence. [Open-Cap_Format-OCF PR #515](https://github.com/Open-Cap-Table-Coalition/Open-Cap-Format-OCF/pull/515)
 
-3. **ISO / NSO Split Calculator**: This tool allows a user to determine the ISO / NSO split for equity compensation issuances for a given stakeholder. This tool shows the split of NSO/ISO for each vesting period of the relative equity compensation issuances. This tool uses the vesting schedule generator under the hood and will only work for vesting schedules that can be generated using that tool.
+If neither `vestings` nor `vesting_terms_id` are present, then the shares are treated as fully vested on issuance. [Open-Cap_Format-OCF PR #515](https://github.com/Open-Cap-Table-Coalition/Open-Cap-Format-OCF/pull/515)
 
-   ```typescript
-   const isoNso = new ISONSOCalculatorService(
-     stakeholderId,
-     transactions,
-     vestingTerms,
-     valuations
-   ).Results;
-   ```
+### 🔧 Usage
 
-4. **OCF Validator**: This tool tests the logical and structural validity of an OCF package. We are continuing to build out the rules set for validity but have good coverage for stock transactions and basic validations for all other transactions. The tool outputs a JSON object with the variables of `result: string` , `report: string[]` and `snapshots: any[]` . The result shows if the package is valid or what the issue is if it is not. The report shows a list of all the validity checks completed per transaction and snapshots shows an array of end of day captables based on the package.
+The `VestingScheduleService` takes [`OCF_VESTING_TERMS_FILE`s](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/VestingTermsFile/#file-vesting-terms), [`OCF_TRANSACTIONS_FILE`s](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/TransactionsFile/#file-transactions), and an equity compensation issuance [`security_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction) as parameters.
 
-   ```typescript
-   const ocfValidation = ocfValidator(ocfPackageFolderDir);
-   ```
+```typescript
+const vestingScheduleService = new VestingScheduleService(
+  vestingTerms,
+  transactions,
+  equityCompensationIssuanceSecurityId
+);
+```
 
-5. **OCF Snapshot**: This tool allows the user to see the outstanding captable of a OCF package on a given date.
+`.getFullSchedule()` returns an array of the following objects:
 
-   ```typescript
-   const snapshot = ocfSnapshot(ocfPackageFolderDir, ocfSnapshotDate);
-   ```
+```typescript
+{
+   Date: string;
+   "Event Type": "Start" | "Cliff" | "Vesting" | "Exercise";
+   "Event Quantity": number;
+   "Remaining Unvested": number;
+   "Cumulative Vested": number;
+   "Became Exercisable": number;
+   "Cumulative Exercised": number;
+   "Available to Exercise": number;
+}
+```
 
-## Usage
+`.getVestingStatus(checkDateString)` provides the above as of a given date.
+
+### 🔍 Examples
+
+Run `npm run print:vesting_schedule.ts`, `npm run print:vesting_status.ts`, and `npm run print:iso_nso_test.ts` in the command line to see example results printed to console.
+
+## ISO / NSO Split Calculator
+
+This tool allows a user to determine the ISO / NSO split for equity compensation issuances for a given stakeholder. This tool shows the split of NSO/ISO for each vesting period of the relative equity compensation issuances.
+
+### ⚠️ **Warning**
+
+> This tool is in development and should not be relied on for legal purposes.
+
+### 📝 Notes
+
+This tool uses the vesting schedule generator under the hood and will only work for vesting schedules that can be generated using that tool.
+
+This tool utilizes a `valuation_id` within the `Equity_Compensation_Issuance` object, which is not in the current released version of OCF as of November 2, 2024. [Open-Cap-Table-Format-OCT Issue #535](https://github.com/Open-Cap-Table-Coalition/Open-Cap-Format-OCF/issues/535#issue-2595216527)
+
+### 💡Conventions
+
+If one or more `valuation_id`s are provided, the fair market value as of the grant date is assumed to be last valuation prior to the grant date. Otherwise, the fair market value as of the grant date is assumed to be the `exercise-price`.
+
+This tool throws an error if neither a `valuation_id` nor an `exercise_price` is provided.
+
+### 🔧 Usage
+
+The `ISONSOCalculatorService` takes [`OCF_TRANSACTIONS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/TransactionsFile/#file-transactions)s, [`OCF_VESTING_TERMS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/VestingTermsFile/#file-vesting-terms)s, an equity compensation issuance [`stakeholder_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction), and [`OCF_VALUATIONS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/ValuationsFile/#file-valuations)s as parameters.
+
+```typescript
+const isoNsoService = new ISONSOCalculatorService(
+  stakeholderId,
+  transactions,
+  vestingTerms,
+  valuations
+);
+```
+
+`.Results` returns an array of the following objects:
+
+```typescript
+{
+  Year: number;
+  Date: string;
+  "Security Id": string;
+  "Event Type": "Start" | "Cliff" | "Vesting" | "Exercise";
+  "Became Exercisable": number;
+  "FMV": number;
+  StartingCapacity: number;
+  ISOShares: number;
+  NSOShares: number;
+  CapacityUtilized: number;
+  CapacityRemaining: number;
+}
+```
+
+## OCF Validator
+
+This tool tests the logical and structural validity of an OCF package. We are continuing to build out the rules set for validity but have good coverage for stock transactions and basic validations for all other transactions. The tool outputs a JSON object with the variables of `result: string` , `report: string[]` and `snapshots: any[]` . The result shows if the package is valid or what the issue is if it is not. The report shows a list of all the validity checks completed per transaction and snapshots shows an array of end of day captables based on the package.
+
+```typescript
+const ocfValidation = ocfValidator(ocfPackageFolderDir);
+```
+
+## OCF Snapshot
+
+This tool allows the user to see the outstanding captable of a OCF package on a given date.
+
+```typescript
+const snapshot = ocfSnapshot(ocfPackageFolderDir, ocfSnapshotDate);
+```
+
+## How to use the toolset
 
 ### (before publication to NPM)
 
