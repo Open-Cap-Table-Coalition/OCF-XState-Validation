@@ -1,4 +1,10 @@
-// ideally we'll eventually import these from OCF
+/**
+ * Ideally we'll eventually import these from OCF
+ */
+
+/******************************
+ * Vesting Condition
+ ******************************/
 interface VestingConditionTrigger_VestingStart {
   type: "VESTING_START_DATE";
 }
@@ -99,6 +105,9 @@ export type VestingCondition =
   | VestingCondition_VestingScheduleRelative
   | VestingCondition_VestingEvent;
 
+/******************************
+ * Vesting Terms
+ ******************************/
 export interface VestingTerms {
   id: string;
   comments?: string[];
@@ -115,22 +124,16 @@ export interface VestingTerms {
   vesting_conditions: VestingCondition[];
 }
 
-export interface TX_Vesting_Start {
-  id: string;
-  comments?: string[];
-  object_type: "TX_VESTING_START";
-  date: string;
-  security_id: string;
-  vesting_condition_id: string;
-}
-
+/******************************
+ * Valuation
+ ******************************/
 export interface Valuation {
   id: string;
-  comments: string[];
+  comments?: string[];
   object_type: "VALUATION";
-  provider: string;
-  board_approval_date: string;
-  stockholder_approval_date: string;
+  provider?: string;
+  board_approval_date?: string;
+  stockholder_approval_date?: string;
   price_per_share: {
     amount: string;
     currency: string;
@@ -138,6 +141,18 @@ export interface Valuation {
   effective_date: string;
   stock_class_id: string;
   valuation_type: "409A";
+}
+
+/******************************
+ * Transactions
+ ******************************/
+export interface TX_Vesting_Start {
+  id: string;
+  comments?: string[];
+  object_type: "TX_VESTING_START";
+  date: string;
+  security_id: string;
+  vesting_condition_id: string;
 }
 
 export interface TX_Equity_Compensation_Issuance {
@@ -206,3 +221,20 @@ export interface TX_Equity_Compensation_Exercise {
   resulting_security_ids: string[];
   quantity: string;
 }
+
+export interface TX_Equity_Compensation_Cancellation {
+  id: string;
+  comments?: string[];
+  object_type: "TX_EQUITY_COMPENSATION_CANCELLATION";
+  date: string;
+  security_id: string;
+  balance_security_id?: string;
+  reason_text: string;
+  quantity: string;
+}
+
+export type Transaction =
+  | TX_Equity_Compensation_Issuance
+  | TX_Vesting_Start
+  | TX_Equity_Compensation_Exercise
+  | TX_Equity_Compensation_Cancellation;

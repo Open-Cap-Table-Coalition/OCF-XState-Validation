@@ -1,4 +1,5 @@
 import {
+  Transaction,
   TX_Equity_Compensation_Exercise,
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
@@ -7,11 +8,7 @@ import {
 
 export class VestingInitializationService {
   constructor(
-    private transactions: (
-      | TX_Equity_Compensation_Issuance
-      | TX_Vesting_Start
-      | TX_Equity_Compensation_Exercise
-    )[],
+    private transactions: Transaction[],
     private vestingTerms: VestingTerms[],
     private securityId: string
   ) {}
