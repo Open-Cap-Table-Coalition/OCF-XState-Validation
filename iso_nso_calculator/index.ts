@@ -112,11 +112,24 @@ export class ISONSOCalculatorService {
   // For now we'll assume that the FMV on the grant date is equal to the exercise price if there is no valuation_id
   // Alternative approaches to be discussed
   private getFMV(issuance: TX_Equity_Compensation_Issuance) {
+    let FMV;
+
     const valuation = this.valuations?.find(
       (valuation) => valuation.id === issuance.valuation_id
     );
-    const FMV =
-      valuation?.price_per_share.amount ?? issuance.exercise_price.amount;
+
+    if (!valuation) {
+      if (!issuance.exercise_price || !issuance.exercise_price.amount) {
+        throw new Error(
+          `Cannot run the ISO test unless either a valuation or exercies price is provided`
+        );
+      } else {
+        FMV = issuance.exercise_price.amount;
+      }
+    } else {
+      FMV = valuation.price_per_share.amount;
+    }
+
     return parseFloat(FMV);
   }
 
