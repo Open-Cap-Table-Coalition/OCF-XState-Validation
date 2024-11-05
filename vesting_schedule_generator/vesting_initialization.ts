@@ -3,6 +3,7 @@ import {
   TX_Equity_Compensation_Exercise,
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
+  vestingObject,
   VestingTerms,
 } from "../types";
 
@@ -13,11 +14,7 @@ export class VestingInitializationService {
     private securityId: string
   ) {}
 
-  public setUpVestingData(): {
-    tx_issuance: TX_Equity_Compensation_Issuance;
-    tx_vestingStart: TX_Vesting_Start;
-    issuanceVestingTerms: VestingTerms;
-  } {
+  public setUpVestingData() {
     const tx_issuance = this.findIssuance();
     const tx_vestingStart = this.findVestingStartTx();
     const issuanceVestingTerms = this.findIssuanceVestingTerms(tx_issuance);
@@ -44,23 +41,25 @@ export class VestingInitializationService {
         tx.object_type === "TX_VESTING_START" &&
         tx.security_id === this.securityId
     );
-    if (!vestingStartTx) {
-      throw new Error(
-        `For this generator, the transaction must have a TX_VESTING_START object.`
-      );
-    }
     return vestingStartTx;
   }
 
   private findIssuanceVestingTerms(issuance: TX_Equity_Compensation_Issuance) {
+    /**
+     * Absence of both vesting_terms_id and vestings means the shares are fully vested on issuance. https://github.com/Open-Cap-Table-Coalition/OCF-Tools/issues/76
+     * If both vesting_terms_id and vestings are present, defer to vestings. https://github.com/Open-Cap-Table-Coalition/OCF-Tools/issues/77
+     */
+
+    const vestings = issuance.vestings;
+
+    if (vestings) return vestings;
+
     const issuanceVestingTerms = this.vestingTerms.find(
       (vt) => vt.id === issuance.vesting_terms_id
     );
-    if (!issuanceVestingTerms) {
-      throw new Error(
-        `Vesting terms for security.id ${this.securityId} not found`
-      );
-    }
-    return issuanceVestingTerms;
+
+    if (issuanceVestingTerms) return issuanceVestingTerms;
+
+    return undefined;
   }
 }

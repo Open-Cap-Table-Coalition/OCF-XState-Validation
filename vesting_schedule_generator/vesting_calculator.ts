@@ -26,16 +26,131 @@ export class VestingCalculatorService {
 
   constructor(
     private tx_issuance: TX_Equity_Compensation_Issuance,
-    private tx_vestingStart: TX_Vesting_Start,
-    private issuanceVestingTerms: VestingTerms
+    protected tx_vestingStart?: TX_Vesting_Start,
+    protected issuanceVestingTerms?: VestingTerms | vestingObject[] // this will be undefined if neither a vesting_terms_id or vestings have been provided, via the VestingInitializationService
   ) {
-    this.determineVestingMode(),
-      (this.quantity = parseFloat(this.tx_issuance.quantity));
+    this.quantity = parseFloat(this.tx_issuance.quantity);
     this.unvested = this.quantity;
     this.EARLY_EXERCISABLE = !!this.tx_issuance.early_exercisable;
+    this.generate();
+  }
+
+  /**
+   * issuanceVestingTerms will be undefined if neither a vesting_terms_id or vestings have been provided, via the VestingInitiationService
+   * In that situation the option should be treated as full vested on issuance
+   * https://github.com/Open-Cap-Table-Coalition/OCF-Tools/issues/76
+   */
+  private isVestedAtGrantDate(): this is { issuanceVestingTerms: undefined } {
+    return this.issuanceVestingTerms === undefined;
+  }
+
+  // issuanceVestingTerms will not have an "id" field if a vesting_terms_id was provided
+  private vestingsProvided(): this is {
+    issuanceVestingTerms: vestingObject[];
+  } {
+    return (
+      this.issuanceVestingTerms !== undefined &&
+      !("id" in this.issuanceVestingTerms)
+    );
+  }
+
+  // issuanceVestingTerms will have an "id" field if a vesting_terms_id was provided
+  private shouldCalculate(): this is {
+    issuanceVestingTerms: VestingTerms;
+    tx_vestingStart: TX_Vesting_Start;
+  } {
+    return (
+      this.issuanceVestingTerms !== undefined &&
+      "id" in this.issuanceVestingTerms &&
+      this.tx_vestingStart !== undefined
+    );
+  }
+
+  private generate() {
+    /**
+     * Absence of both vesting_terms_id and vestings means the shares are fully vested on issuance. https://github.com/Open-Cap-Table-Coalition/OCF-Tools/issues/76
+     * If both vesting_terms_id and vestings are present, defer to vestings. https://github.com/Open-Cap-Table-Coalition/OCF-Tools/issues/77
+     */
+
+    if (this.isVestedAtGrantDate()) {
+      this.handleVestedOnGrantDate();
+    } else if (this.vestingsProvided()) {
+      this.handleVestings();
+    } else if (this.shouldCalculate()) {
+      this.determineVestingMode();
+      this.handleVestingStartTx();
+      this.handleNextVestingCondition();
+    }
+  }
+
+  private handleVestedOnGrantDate() {
+    if (!this.isVestedAtGrantDate())
+      throw new Error(
+        `security id ${this.tx_issuance.security_id} is not vested on grant date`
+      );
+
+    const event: VestingInstallment = {
+      Date: this.tx_issuance.date,
+      "Event Type": "Grant Date",
+      "Event Quantity": this.quantity,
+      "Remaining Unvested": 0,
+      "Cumulative Vested": this.quantity,
+      "Became Exercisable": this.quantity,
+      "Cumulative Exercised": 0,
+      "Available to Exercise": 0, // placeholder to be populated via the exercise service
+    };
+
+    this.vestingSchedule.push(event);
+  }
+
+  private handleVestings() {
+    if (!this.vestingsProvided())
+      throw new Error(
+        `vestings have not been provided for security id ${this.tx_issuance.security_id}`
+      );
+
+    const events: VestingInstallment[] = this.issuanceVestingTerms.map(
+      (obj, index) => {
+        const amountVested = parseFloat(obj.amount);
+        this.vested += amountVested;
+        this.unvested -= amountVested;
+        let becameExercisable;
+
+        /**
+         * If the option is early exercisable, then designate the entire option as becoming exercisable as of the first event,
+         * and do not designate any options as becoming early exercisable for any later events.
+         * If the option is not early exercisable, then it becomes exercisable as it vests.
+         */
+        if (this.EARLY_EXERCISABLE) {
+          if (index === 0) {
+            becameExercisable = this.quantity;
+          }
+          becameExercisable = 0;
+        }
+        becameExercisable = amountVested;
+
+        return {
+          Date: obj.date,
+          "Event Type": index === 0 ? "Start" : "Vesting",
+          "Event Quantity": amountVested,
+          "Remaining Unvested": this.unvested,
+          "Cumulative Vested": this.vested,
+          "Became Exercisable": becameExercisable,
+          "Cumulative Exercised": 0,
+          "Available to Exercise": 0, // placeholder to be populated via the exercise service
+        };
+      }
+    );
+
+    this.vestingSchedule.push(...events);
   }
 
   private determineVestingMode() {
+    if (!this.shouldCalculate())
+      throw new Error(
+        `vesting schedule should not be calculated for security id ${this.tx_issuance.security_id}`
+      );
+
     switch (this.issuanceVestingTerms.allocation_type) {
       case "CUMULATIVE_ROUNDING":
         this.vestingMode = (installment: number, denominator: string) => {
@@ -111,6 +226,11 @@ export class VestingCalculatorService {
   }
 
   private handleVestingStartTx() {
+    if (!this.shouldCalculate())
+      throw new Error(
+        `vesting schedule should not be calculated for security id ${this.tx_issuance.security_id}`
+      );
+
     // initialize the first transaction date and the vestingConditionId to the vesting start date
     this.transactionDate = new Date(this.tx_vestingStart.date);
     this.vestingConditionId = this.tx_vestingStart.vesting_condition_id;
@@ -159,10 +279,14 @@ export class VestingCalculatorService {
     };
 
     this.vestingSchedule.push(event);
-    return this;
   }
 
   private handleFirstVestingDate(cliffLength?: number) {
+    if (!this.shouldCalculate())
+      throw new Error(
+        `vesting schedule should not be calculated for security id ${this.tx_issuance.security_id}`
+      );
+
     const grantDate = new Date(this.tx_issuance.date);
 
     /**
@@ -211,6 +335,11 @@ export class VestingCalculatorService {
   }
 
   private incrementTransactionDate() {
+    if (!this.shouldCalculate())
+      throw new Error(
+        `vesting schedule should not be calculated for security id ${this.tx_issuance.security_id}`
+      );
+
     // this method is only used for relative vesting schedules
     if (
       this.currentVestingCondition.trigger.type !== "VESTING_SCHEDULE_RELATIVE"
@@ -258,6 +387,11 @@ export class VestingCalculatorService {
   }
 
   private handleNextVestingCondition() {
+    if (!this.shouldCalculate())
+      throw new Error(
+        `vesting schedule should not be calculated for security id ${this.tx_issuance.security_id}`
+      );
+
     // initialize the currentVestingCondition
     // throw error if the trigger is not VESTING_SCHEDULE_RELATIVE
     this.vestingConditionId =
@@ -314,13 +448,5 @@ export class VestingCalculatorService {
 
     // handle the first vesting event
     this.handleFirstVestingDate(currentVestingCondition.cliff_length);
-  }
-
-  generate() {
-    if (this.hasBeenGenerated) return this.vestingSchedule;
-
-    this.handleVestingStartTx().handleNextVestingCondition();
-
-    return this.vestingSchedule;
   }
 }
