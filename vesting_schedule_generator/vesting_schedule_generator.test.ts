@@ -1,4 +1,6 @@
-import { VestingSchedule, VestingScheduleService } from ".";
+import { transcode } from "buffer";
+import { VestingInstallment, VestingScheduleService } from ".";
+import { OcfPackageContent } from "../read_ocf_package";
 import {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
@@ -84,14 +86,24 @@ const transactions: (TX_Equity_Compensation_Issuance | TX_Vesting_Start)[] = [
   },
 ];
 
+const ocfPackage: OcfPackageContent = {
+  manifest: [],
+  stakeholders: [],
+  stockClasses: [],
+  transactions: transactions,
+  stockLegends: [],
+  stockPlans: [],
+  vestingTerms: vestingTerms,
+  valuations: [],
+};
+
 describe("VestingScheduleService", () => {
   let service: VestingScheduleService;
-  let fullSchedule: VestingSchedule[];
+  let fullSchedule: VestingInstallment[];
 
   beforeEach(() => {
     service = new VestingScheduleService(
-      vestingTerms,
-      transactions,
+      ocfPackage,
       "equity_compensation_issuance_01"
     );
 

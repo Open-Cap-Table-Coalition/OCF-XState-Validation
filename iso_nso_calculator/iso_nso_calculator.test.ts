@@ -1,4 +1,5 @@
 import { ISONSOCalculatorService, ISONSOTestResult } from ".";
+import { OcfPackageContent } from "../read_ocf_package";
 import {
   Transaction,
   Valuation,
@@ -111,17 +112,23 @@ const valuations: Valuation[] = [
   },
 ];
 
+const ocfPackage: OcfPackageContent = {
+  manifest: [],
+  stakeholders: [],
+  stockClasses: [],
+  transactions: transactions,
+  stockLegends: [],
+  stockPlans: [],
+  vestingTerms: vestingTerms,
+  valuations: valuations,
+};
+
 describe("ISONSOCalculatorService", () => {
   let service: ISONSOCalculatorService;
   let results: ISONSOTestResult[];
 
   beforeEach(() => {
-    service = new ISONSOCalculatorService(
-      "emilyEmployee",
-      transactions,
-      vestingTerms,
-      valuations
-    );
+    service = new ISONSOCalculatorService(ocfPackage, "emilyEmployee");
 
     results = service.Results;
   });

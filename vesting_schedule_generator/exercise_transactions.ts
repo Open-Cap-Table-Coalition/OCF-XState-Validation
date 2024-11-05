@@ -1,4 +1,4 @@
-import { VestingSchedule } from ".";
+import { VestingInstallment } from ".";
 import { TX_Equity_Compensation_Exercise } from "../types";
 
 export class ExerciseTransactionsService {
@@ -7,7 +7,7 @@ export class ExerciseTransactionsService {
 
   constructor(
     private exerciseTransactions: TX_Equity_Compensation_Exercise[],
-    private vestingSchedule: VestingSchedule[]
+    private vestingSchedule: VestingInstallment[]
   ) {
     this.sortTransactions();
     this.sortVestingSchedule();
@@ -37,7 +37,7 @@ export class ExerciseTransactionsService {
     let left = 0;
     let right = filteredSchedule.length - 1;
     let result = {
-      lastVestingEventBeforeExercise: {} as VestingSchedule,
+      lastVestingEventBeforeExercise: {} as VestingInstallment,
       index: 0,
     };
 
@@ -62,13 +62,13 @@ export class ExerciseTransactionsService {
 
   private processExerciseTx(
     tx: TX_Equity_Compensation_Exercise,
-    installment: VestingSchedule,
+    installment: VestingInstallment,
     index: number
   ) {
     const quantityExercised = parseFloat(tx.quantity);
     this.cumulativeExercised += quantityExercised;
 
-    const event: VestingSchedule = {
+    const event: VestingInstallment = {
       Date: tx.date,
       "Event Type": "Exercise",
       "Event Quantity": quantityExercised,

@@ -1,3 +1,4 @@
+import { OcfPackageContent } from "../read_ocf_package";
 import {
   Transaction,
   TX_Equity_Compensation_Cancellation,
@@ -8,12 +9,12 @@ import {
   VestingTerms,
 } from "../types";
 import {
-  VestingSchedule,
+  VestingInstallment,
   VestingScheduleService,
 } from "../vesting_schedule_generator";
 
 // Define the interface for the data supplied to the calculator
-interface Installment extends VestingSchedule {
+interface Installment extends VestingInstallment {
   "Security Id": string;
   "Grant Date": string;
   Year: number; // Represents the year of the ISO/NSO test
@@ -40,35 +41,47 @@ export interface ISONSOTestResult
 }
 
 export class ISONSOCalculatorService {
-  private issuances: TX_Equity_Compensation_Issuance[];
-  private installments: Installment[];
+  private transactions!: Transaction[];
+  private valuations!: Valuation[];
+  private issuances!: TX_Equity_Compensation_Issuance[];
+  private installments!: Installment[];
   private ANNUAL_CAPACITY = 100000;
   private remainingCapacity: number;
   private results: ISONSOTestResult[];
 
   constructor(
-    private stakeholderId: string,
-    private transactions: Transaction[],
-    private vestingTerms: VestingTerms[],
-    private valuations: Valuation[]
+    private ocfPackage: OcfPackageContent,
+    private stakeholderId: string
   ) {
-    this.issuances = this.transactions.filter(
+    this.deconstructOCFPackage();
+    this.getIssuances();
+    this.createInstallments();
+    this.sortInstallments();
+    this.remainingCapacity = this.ANNUAL_CAPACITY;
+    this.results = this.calculate();
+  }
+
+  private deconstructOCFPackage() {
+    const { transactions, valuations } = this.ocfPackage;
+    this.transactions = transactions;
+    this.valuations = valuations;
+  }
+
+  private getIssuances() {
+    const issuances = this.transactions.filter(
       (tx): tx is TX_Equity_Compensation_Issuance =>
         tx.object_type === "TX_EQUITY_COMPENSATION_ISSUANCE" &&
         tx.stakeholder_id === this.stakeholderId
     );
-    this.installments = this.createInstallments();
-    this.sortInstallments();
-    this.remainingCapacity = this.ANNUAL_CAPACITY;
-    this.results = this.calculate();
+
+    this.issuances = issuances;
   }
 
   private createInstallments() {
     // create a vesting schedule for each issuance
     const allInstallments = this.issuances.reduce((acc, issuance) => {
       const schedule = new VestingScheduleService(
-        this.vestingTerms,
-        this.transactions,
+        this.ocfPackage,
         issuance.security_id
       ).getFullSchedule();
 
@@ -92,7 +105,7 @@ export class ISONSOCalculatorService {
       return acc;
     }, [] as Installment[]);
 
-    return allInstallments;
+    this.installments = allInstallments;
   }
 
   // sort installments by grant date and then by vesting date

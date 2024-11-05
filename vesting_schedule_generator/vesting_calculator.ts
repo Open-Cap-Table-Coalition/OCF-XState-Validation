@@ -1,10 +1,11 @@
-import { VestingSchedule } from ".";
+import { VestingInstallment } from ".";
 import {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
   VestingCondition,
   VestingCondition_VestingScheduleRelative,
   VestingCondition_VestingStart,
+  vestingObject,
   VestingTerms,
 } from "../types";
 
@@ -21,8 +22,7 @@ export class VestingCalculatorService {
   private transactionDate!: Date;
   private vestingConditionId!: string;
   private currentVestingCondition!: VestingCondition;
-  private vestingSchedule: VestingSchedule[] = [];
-  private hasBeenGenerated: boolean = false;
+  public vestingSchedule: VestingInstallment[] = [];
 
   constructor(
     private tx_issuance: TX_Equity_Compensation_Issuance,
@@ -116,6 +116,7 @@ export class VestingCalculatorService {
     this.vestingConditionId = this.tx_vestingStart.vesting_condition_id;
 
     // throw error if no vesting conditions for the provided security id or if the first condition does not have a Vesting_Start_Date trigger
+
     const currentVestingCondition =
       this.issuanceVestingTerms.vesting_conditions.find(
         (vc): vc is VestingCondition_VestingStart =>
@@ -146,7 +147,7 @@ export class VestingCalculatorService {
     // designate the entire option as becoming exercisable as of the "Start" event if the option is early exercisable
     const becameExercisable = this.quantity * +this.EARLY_EXERCISABLE;
 
-    const event: VestingSchedule = {
+    const event: VestingInstallment = {
       Date: this.transactionDate.toISOString().split("T")[0],
       "Event Type": "Start",
       "Event Quantity": amountVested,
@@ -185,7 +186,7 @@ export class VestingCalculatorService {
         if (index === 0) {
           acc.push(schedule);
         } else if (index === firstVestingDateIndex) {
-          const installment: VestingSchedule = {
+          const installment: VestingInstallment = {
             ...schedule,
             "Event Type": eventType,
             "Event Quantity": schedule["Cumulative Vested"],
@@ -203,7 +204,7 @@ export class VestingCalculatorService {
 
         return acc;
       },
-      [] as VestingSchedule[]
+      [] as VestingInstallment[]
     );
 
     this.vestingSchedule = scheduleWithCliff;
@@ -294,7 +295,7 @@ export class VestingCalculatorService {
       // increment becomeExercisable only if the option is not early exercisable
       const becameExercisable = amountVested * +!this.EARLY_EXERCISABLE;
 
-      const event: VestingSchedule = {
+      const event: VestingInstallment = {
         Date: this.transactionDate.toISOString().split("T")[0],
         "Event Type": "Vesting",
         "Event Quantity": amountVested,

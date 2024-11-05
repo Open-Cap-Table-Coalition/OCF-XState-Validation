@@ -36,12 +36,11 @@ If neither `vestings` nor `vesting_terms_id` are present, then the shares are tr
 
 ### 🔧 Usage
 
-The `VestingScheduleService` takes [`OCF_VESTING_TERMS_FILE`s](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/VestingTermsFile/#file-vesting-terms), [`OCF_TRANSACTIONS_FILE`s](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/TransactionsFile/#file-transactions), and an equity compensation issuance [`security_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction) as parameters.
+The `VestingScheduleService` takes the `ocfPackage` returned from `readOcfPackage` and an equity compensation issuance [`security_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction) as parameters.
 
 ```typescript
 const vestingScheduleService = new VestingScheduleService(
-  vestingTerms,
-  transactions,
+  ocfPackage,
   equityCompensationIssuanceSecurityId
 );
 ```
@@ -89,15 +88,10 @@ This tool throws an error if neither a `valuation_id` nor an `exercise_price` is
 
 ### 🔧 Usage
 
-The `ISONSOCalculatorService` takes [`OCF_TRANSACTIONS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/TransactionsFile/#file-transactions)s, [`OCF_VESTING_TERMS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/VestingTermsFile/#file-vesting-terms)s, an equity compensation issuance [`stakeholder_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction), and [`OCF_VALUATIONS_FILE`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/files/ValuationsFile/#file-valuations)s as parameters.
+The `ISONSOCalculatorService` takes the `ocfPackage` returned from `readOcfPackage` and an equity compensation issuance [`stakeholder_id`](https://open-cap-table-coalition.github.io/Open-Cap-Format-OCF/schema_markdown/schema/objects/transactions/issuance/EquityCompensationIssuance/#object-equity-compensation-issuance-transaction) as parameters.
 
 ```typescript
-const isoNsoService = new ISONSOCalculatorService(
-  stakeholderId,
-  transactions,
-  vestingTerms,
-  valuations
-);
+const isoNsoService = new ISONSOCalculatorService(ocfPackage, valuations);
 ```
 
 `.Results` returns an array of the following objects:
