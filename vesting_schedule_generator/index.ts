@@ -1,18 +1,23 @@
+import { OcfPackageContent } from "../read_ocf_package";
 import type {
-  TX_Vesting_Start,
-  TX_Equity_Compensation_Issuance,
   TX_Equity_Compensation_Exercise,
   VestingTerms,
-  Valuation,
   Transaction,
 } from "../types";
 import { ExerciseTransactionsService } from "./exercise_transactions";
 import { VestingCalculatorService } from "./vesting_calculator";
 import { VestingInitializationService } from "./vesting_initialization";
 
-export interface VestingSchedule {
+export type VestingInstallmentEventType =
+  | "Grant Date"
+  | "Start"
+  | "Cliff"
+  | "Vesting"
+  | "Exercise";
+
+export interface VestingInstallment {
   Date: string;
-  "Event Type": "Start" | "Cliff" | "Vesting" | "Exercise";
+  "Event Type": VestingInstallmentEventType;
   "Event Quantity": number;
   "Remaining Unvested": number;
   "Cumulative Vested": number;
@@ -22,43 +27,56 @@ export interface VestingSchedule {
 }
 
 export class VestingScheduleService {
-  private initializationService: VestingInitializationService;
-  private calculationService: VestingCalculatorService;
-  private exerciseTransactionsService: ExerciseTransactionsService;
-  private vestingSchedule: VestingSchedule[];
+  private vestingTerms!: VestingTerms[];
+  private transactions!: Transaction[];
+  private vestingSchedule!: VestingInstallment[];
 
   constructor(
-    private vestingTerms: VestingTerms[],
-    private transactions: Transaction[],
+    private ocfPackage: OcfPackageContent,
     private securityId: string
   ) {
-    // initialize vesting data
-    this.initializationService = new VestingInitializationService(
+    this.deconstructOCFPackage();
+    this.generateVestingSchedule();
+    this.addExerciseDetailsToVestingSchedule();
+  }
+
+  private deconstructOCFPackage() {
+    const { vestingTerms, transactions } = this.ocfPackage;
+    this.vestingTerms = vestingTerms;
+    this.transactions = transactions;
+  }
+
+  private generateVestingSchedule() {
+    const initializationService = new VestingInitializationService(
       this.transactions,
       this.vestingTerms,
       this.securityId
     );
-    const { tx_issuance, tx_vestingStart, issuanceVestingTerms } =
-      this.initializationService.setUpVestingData();
 
-    // calculate vesting schedule
-    this.calculationService = new VestingCalculatorService(
+    const { tx_issuance, tx_vestingStart, issuanceVestingTerms } =
+      initializationService.setUpVestingData();
+
+    const calculationService = new VestingCalculatorService(
       tx_issuance,
       tx_vestingStart,
       issuanceVestingTerms
     );
-    (this.vestingSchedule = this.calculationService.generate()),
-      // add exercise details to vesting schedule
-      (this.exerciseTransactionsService = new ExerciseTransactionsService(
-        transactions.filter(
-          (tx): tx is TX_Equity_Compensation_Exercise =>
-            tx.object_type === "TX_EQUITY_COMPENSATION_EXERCISE" &&
-            tx.security_id === securityId
-        ),
-        this.vestingSchedule
-      ));
+    this.vestingSchedule = calculationService.vestingSchedule;
+  }
+
+  private addExerciseDetailsToVestingSchedule() {
+    const exerciseTransactions = this.transactions.filter(
+      (tx): tx is TX_Equity_Compensation_Exercise =>
+        tx.object_type === "TX_EQUITY_COMPENSATION_EXERCISE" &&
+        tx.security_id === this.securityId
+    );
+
+    const exerciseTransactionsService = new ExerciseTransactionsService(
+      exerciseTransactions,
+      this.vestingSchedule
+    );
     this.vestingSchedule =
-      this.exerciseTransactionsService.handleExerciseTransactions();
+      exerciseTransactionsService.handleExerciseTransactions();
   }
 
   public getFullSchedule() {

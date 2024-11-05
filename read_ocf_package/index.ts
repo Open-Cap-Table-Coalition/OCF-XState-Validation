@@ -1,22 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
-import {
-  TX_Equity_Compensation_Exercise,
-  TX_Equity_Compensation_Issuance,
-  TX_Vesting_Start,
-  Valuation,
-  VestingTerms,
-} from "../types";
+import { Transaction, Valuation, VestingTerms } from "../types";
 
 export interface OcfPackageContent {
   manifest: any;
   stakeholders: any;
   stockClasses: any;
-  transactions: Array<
-    | TX_Equity_Compensation_Issuance
-    | TX_Vesting_Start
-    | TX_Equity_Compensation_Exercise
-  >;
+  transactions: Transaction[];
   stockLegends: any;
   stockPlans: any;
   vestingTerms: VestingTerms[];
@@ -51,7 +41,7 @@ export const readOcfPackage = (packagePath: string): OcfPackageContent => {
     );
   });
 
-  const transactions: TX_Equity_Compensation_Issuance[] = [];
+  const transactions: Transaction[] = [];
   manifest.transactions_files.forEach((file: file) => {
     transactions.push(
       ...JSON.parse(
