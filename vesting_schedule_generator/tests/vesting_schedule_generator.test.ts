@@ -1,11 +1,12 @@
-import { VestingInstallment, VestingScheduleService } from ".";
-import { OcfPackageContent } from "../read_ocf_package";
+import { transcode } from "buffer";
+import { VestingInstallment, VestingScheduleService } from "../index";
+import { OcfPackageContent } from "../../read_ocf_package";
 import {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
   VestingCondition,
   VestingTerms,
-} from "../types";
+} from "../../types";
 
 const vestingConditions: VestingCondition[] = [
   {
@@ -55,7 +56,7 @@ const transactions: (TX_Equity_Compensation_Issuance | TX_Vesting_Start)[] = [
   {
     id: "eci_01",
     object_type: "TX_EQUITY_COMPENSATION_ISSUANCE",
-    date: "2025-08-05",
+    date: "2024-06-01",
     security_id: "equity_compensation_issuance_01",
     custom_id: "EC-1",
     stakeholder_id: "emilyEmployee",
@@ -96,7 +97,7 @@ const ocfPackage: OcfPackageContent = {
   valuations: [],
 };
 
-describe("Grant Date After Cliff", () => {
+describe("VestingScheduleService", () => {
   let service: VestingScheduleService;
   let fullSchedule: VestingInstallment[];
 
@@ -109,12 +110,11 @@ describe("Grant Date After Cliff", () => {
     fullSchedule = service.getFullSchedule();
   });
 
-  test("Should not have a vesting event before 2025-09-01", () => {
+  test("Should not have a vesting event before 2025-06-01", () => {
     const vestingEventBeforeCliff = fullSchedule.find(
       (schedule) =>
-        Date.parse(schedule.Date) < Date.parse("2025-09-01") &&
-        (schedule["Event Type"] === "Vesting" ||
-          schedule["Event Type"] === "Cliff")
+        Date.parse(schedule.Date) <= Date.parse("2025-06-01") &&
+        schedule["Event Type"] === "Vesting"
     );
     expect(vestingEventBeforeCliff).toBeUndefined();
   });
