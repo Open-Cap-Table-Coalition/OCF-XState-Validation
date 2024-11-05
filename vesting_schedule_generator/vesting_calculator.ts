@@ -1,4 +1,4 @@
-import { VestingInstallment } from ".";
+import { VestingInstallment, VestingInstallmentEventType } from ".";
 import {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
@@ -131,7 +131,7 @@ export class VestingCalculatorService {
 
         return {
           Date: obj.date,
-          "Event Type": index === 0 ? "Start" : "Vesting",
+          "Event Type": "Vesting",
           "Event Quantity": amountVested,
           "Remaining Unvested": this.unvested,
           "Cumulative Vested": this.vested,
@@ -302,7 +302,8 @@ export class VestingCalculatorService {
             (schedule) => new Date(schedule.Date) >= grantDate
           )
         : cliffIndex;
-    const eventType = grantDate > cliffDate ? "Vesting" : "Cliff";
+    const eventType: VestingInstallmentEventType =
+      grantDate > cliffDate ? "Grant Date" : "Cliff";
 
     const scheduleWithCliff = this.vestingSchedule.reduce(
       (acc, schedule, index) => {
