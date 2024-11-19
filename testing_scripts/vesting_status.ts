@@ -4,13 +4,11 @@ import { OcfPackageContent, readOcfPackage } from "../read_ocf_package";
 const packagePath = "./sample_ocf_folders/acme_holdings_limited";
 const securityId = "equity_compensation_issuance_01";
 const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
-const { vestingTerms, transactions } = ocfPackage;
 
 try {
   const checkDateString = "2020-06-15";
   const vestingStatus = new VestingScheduleService(
-    vestingTerms,
-    transactions,
+    ocfPackage,
     securityId
   ).getVestingStatus(checkDateString);
 
