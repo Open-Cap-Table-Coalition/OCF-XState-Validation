@@ -1,4 +1,4 @@
-import { ISONSOCalculatorService } from "../iso_nso_calculator";
+import { ISOCalculator } from "iso_nso_calculator";
 import { OcfPackageContent, readOcfPackage } from "../read_ocf_package";
 
 const packagePath = "./sample_ocf_folders/acme_holdings_limited";
@@ -6,8 +6,8 @@ const stakeholderId = "emilyEmployee";
 const ocfPackage: OcfPackageContent = readOcfPackage(packagePath);
 
 try {
-  const results = new ISONSOCalculatorService(ocfPackage, stakeholderId)
-    .Results;
+  const calculator = new ISOCalculator(ocfPackage);
+  const results = calculator.execute(stakeholderId);
 
   const years: number[] = [];
   results.map((result) => {

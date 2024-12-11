@@ -1,11 +1,10 @@
-import { VestingInstallment, VestingScheduleService } from "../index";
-import { OcfPackageContent } from "../../read_ocf_package";
-import {
+import { OcfPackageContent } from "../../../read_ocf_package";
+import type {
   TX_Equity_Compensation_Issuance,
   TX_Vesting_Start,
   VestingCondition,
   VestingTerms,
-} from "../../types";
+} from "types";
 
 const vestingConditions: VestingCondition[] = [
   {
@@ -45,6 +44,7 @@ const vestingTerms: VestingTerms[] = [
     id: "four_year_monthly_one_year_cliff_cumulative_round_down",
     object_type: "VESTING_TERMS",
     name: "Four Year / One Year Cliff - Cumulative Round Down",
+    description: "Four Year / One Year Cliff - Cumulative Round Down",
     allocation_type: "CUMULATIVE_ROUND_DOWN",
     vesting_conditions: vestingConditions,
   },
@@ -54,7 +54,7 @@ const transactions: (TX_Equity_Compensation_Issuance | TX_Vesting_Start)[] = [
   {
     id: "eci_01",
     object_type: "TX_EQUITY_COMPENSATION_ISSUANCE",
-    date: "2024-08-05",
+    date: "2025-08-05",
     security_id: "equity_compensation_issuance_01",
     custom_id: "EC-1",
     stakeholder_id: "emilyEmployee",
@@ -84,7 +84,7 @@ const transactions: (TX_Equity_Compensation_Issuance | TX_Vesting_Start)[] = [
   },
 ];
 
-const ocfPackage: OcfPackageContent = {
+export const ocfPackage: OcfPackageContent = {
   manifest: [],
   stakeholders: [],
   stockClasses: [],
@@ -94,46 +94,3 @@ const ocfPackage: OcfPackageContent = {
   vestingTerms: vestingTerms,
   valuations: [],
 };
-
-describe("Grant Date After VCD no cliff", () => {
-  let service: VestingScheduleService;
-  let fullSchedule: VestingInstallment[];
-
-  beforeEach(() => {
-    service = new VestingScheduleService(
-      ocfPackage,
-      "equity_compensation_issuance_01"
-    );
-
-    fullSchedule = service.getFullSchedule();
-  });
-
-  test("Should not have a vesting event before 2024-09-01", () => {
-    const vestingEventBeforeCliff = fullSchedule.find(
-      (schedule) =>
-        Date.parse(schedule.Date) < Date.parse("2024-09-01") &&
-        (schedule["Event Type"] === "Vesting" ||
-          schedule["Event Type"] === "Cliff")
-    );
-    expect(vestingEventBeforeCliff).toBeUndefined();
-  });
-
-  test("First event after Start should be Grant Date", () => {
-    expect(fullSchedule[1]["Event Type"]).toBe("Grant Date");
-  });
-
-  test("Final total vested should equal original quantity", () => {
-    console.table(fullSchedule);
-    const lastInstallment = fullSchedule[fullSchedule.length - 1];
-    const totalVested = lastInstallment["Cumulative Vested"];
-    const originalQuantity = 4800;
-
-    expect(totalVested).toEqual(originalQuantity);
-  });
-
-  test("Last vesting date should be 2028-05-01", () => {
-    const lastInstallment = fullSchedule[fullSchedule.length - 1];
-    const lastDate = lastInstallment.Date;
-    expect(lastDate).toBe("2028-06-01");
-  });
-});

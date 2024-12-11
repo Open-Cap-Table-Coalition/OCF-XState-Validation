@@ -1,18 +1,18 @@
-import { ISONSOCalculatorService, ISONSOTestResult } from ".";
-import { OcfPackageContent } from "../read_ocf_package";
-import {
-  Transaction,
-  Valuation,
+import { OcfPackageContent } from "../../../read_ocf_package";
+import type {
+  TX_Equity_Compensation_Issuance,
+  TX_Vesting_Start,
   VestingCondition,
   VestingTerms,
-} from "../types";
+} from "types";
 
 const vestingConditions: VestingCondition[] = [
   {
     id: "start_condition",
+    description: "start_condition",
     portion: {
-      numerator: "0",
       denominator: "48",
+      numerator: "0",
     },
     trigger: {
       type: "VESTING_START_DATE",
@@ -33,10 +33,10 @@ const vestingConditions: VestingCondition[] = [
         type: "MONTHS",
         occurrences: 48,
         day_of_month: "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH",
+        cliff_installment: 12,
       },
       relative_to_condition_id: "start_condition",
     },
-    cliff_length: 12,
     next_condition_ids: [],
   },
 ];
@@ -46,12 +46,13 @@ const vestingTerms: VestingTerms[] = [
     id: "four_year_monthly_one_year_cliff_cumulative_round_down",
     object_type: "VESTING_TERMS",
     name: "Four Year / One Year Cliff - Cumulative Round Down",
+    description: "Four Year / One Year Cliff - Cumulative Round Down",
     allocation_type: "CUMULATIVE_ROUND_DOWN",
     vesting_conditions: vestingConditions,
   },
 ];
 
-const transactions: Transaction[] = [
+const transactions: (TX_Equity_Compensation_Issuance | TX_Vesting_Start)[] = [
   {
     id: "eci_01",
     object_type: "TX_EQUITY_COMPENSATION_ISSUANCE",
@@ -85,34 +86,7 @@ const transactions: Transaction[] = [
   },
 ];
 
-const valuations: Valuation[] = [
-  {
-    id: "valuation_01",
-    object_type: "VALUATION",
-    price_per_share: { amount: "1", currency: "USD" },
-    effective_date: "2019-05-01",
-    stock_class_id: "ordinaryB",
-    valuation_type: "409A",
-  },
-  {
-    id: "valuation_02",
-    object_type: "VALUATION",
-    price_per_share: { amount: "5", currency: "USD" },
-    effective_date: "2019-08-01",
-    stock_class_id: "ordinaryB",
-    valuation_type: "409A",
-  },
-  {
-    id: "valuation_03",
-    object_type: "VALUATION",
-    price_per_share: { amount: "7", currency: "USD" },
-    effective_date: "2019-10-01",
-    stock_class_id: "ordinaryB",
-    valuation_type: "409A",
-  },
-];
-
-const ocfPackage: OcfPackageContent = {
+export const ocfPackage: OcfPackageContent = {
   manifest: [],
   stakeholders: [],
   stockClasses: [],
@@ -120,20 +94,5 @@ const ocfPackage: OcfPackageContent = {
   stockLegends: [],
   stockPlans: [],
   vestingTerms: vestingTerms,
-  valuations: valuations,
+  valuations: [],
 };
-
-describe("ISONSOCalculatorService", () => {
-  let service: ISONSOCalculatorService;
-  let results: ISONSOTestResult[];
-
-  beforeEach(() => {
-    service = new ISONSOCalculatorService(ocfPackage, "emilyEmployee");
-
-    results = service.Results;
-  });
-
-  test("test", () => {
-    console.table(results);
-  });
-});
