@@ -1,70 +1,101 @@
-/**
- * Ideally we'll eventually import these from OCF
- */
+// Ideally we'll eventually import these from OCF
+
+export interface OCFDataBySecurityId {
+  issuanceTransaction: TX_Equity_Compensation_Issuance;
+  vestingStartTransactions: TX_Vesting_Start[];
+  vestingEventTransactions: TX_Vesting_Event[];
+  exerciseTransactions: TX_Equity_Compensation_Exercise[];
+  cancellationTransactions: TX_Equity_Compensation_Cancellation[];
+  vestingObjects: vestingObject[] | undefined;
+  issuanceVestingTerms: VestingTerms | undefined;
+  valuations: Valuation[];
+}
 
 /******************************
  * Vesting Condition
  ******************************/
-interface VestingConditionTrigger_VestingStart {
+export type Day_Of_Month =
+  | "01"
+  | "02"
+  | "03"
+  | "04"
+  | "05"
+  | "06"
+  | "07"
+  | "08"
+  | "09"
+  | "10"
+  | "11"
+  | "12"
+  | "13"
+  | "14"
+  | "15"
+  | "16"
+  | "17"
+  | "18"
+  | "19"
+  | "20"
+  | "21"
+  | "22"
+  | "23"
+  | "24"
+  | "25"
+  | "26"
+  | "27"
+  | "28"
+  | "29_OR_LAST_DAY_OF_MONTH"
+  | "30_OR_LAST_DAY_OF_MONTH"
+  | "31_OR_LAST_DAY_OF_MONTH"
+  | "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH";
+
+export interface Period_Days {
+  length: number;
+  type: "MONTHS";
+  occurrences: number;
+  day_of_month: Day_Of_Month;
+  cliff_installment?: number;
+}
+
+export interface Period_Months {
+  length: number;
+  type: "DAYS";
+  occurrences: number;
+  cliff_installment?: number;
+}
+
+export interface Trigger {
+  type: string;
+}
+
+export interface VestingStartTrigger extends Trigger {
   type: "VESTING_START_DATE";
 }
 
-interface VestingConditionTrigger_VestingScheduleAbsolute {
+export interface VestingAbsoluteTrigger extends Trigger {
   type: "VESTING_SCHEDULE_ABSOLUTE";
   date: string;
 }
 
-interface VestingConditionTrigger_VestingScheduleRelative {
+export interface VestingRelativeTrigger extends Trigger {
   type: "VESTING_SCHEDULE_RELATIVE";
-  period:
-    | {
-        length: number;
-        type: "DAYS";
-        occurrences: number;
-      }
-    | {
-        length: number;
-        type: "MONTHS";
-        occurrences: number;
-        day_of_month:
-          | "01"
-          | "02"
-          | "03"
-          | "04"
-          | "05"
-          | "06"
-          | "07"
-          | "08"
-          | "09"
-          | "10"
-          | "11"
-          | "12"
-          | "13"
-          | "14"
-          | "15"
-          | "16"
-          | "17"
-          | "18"
-          | "19"
-          | "20"
-          | "21"
-          | "22"
-          | "23"
-          | "24"
-          | "25"
-          | "26"
-          | "27"
-          | "28"
-          | "29_OR_LAST_DAY_OF_MONTH"
-          | "30_OR_LAST_DAY_OF_MONTH"
-          | "31_OR_LAST_DAY_OF_MONTH"
-          | "VESTING_START_DAY_OR_LAST_DAY_OF_MONTH";
-      };
+  period: Period_Months | Period_Days;
   relative_to_condition_id: string;
+  // relative_to_condition: GraphNode;
 }
 
-interface VestingConditionTrigger_VestingEvent {
+export interface VestingEventTrigger extends Trigger {
   type: "VESTING_EVENT";
+}
+
+export interface Earlier_Of_Trigger extends Trigger {
+  type: "VESTING_RELATIONSHIP_EARLIER_OF";
+  input_condition_ids: string[];
+}
+
+export interface Later_Of_Trigger extends Trigger {
+  type: "VESTING_RELATIONSHIP_LATER_OF";
+  input_condition_ids: string[];
+  calculation_type: "SUM" | "MAX" | "MIN" | "MEAN" | "MODE";
 }
 
 interface VestingConditionBase {
@@ -77,50 +108,64 @@ interface VestingConditionBase {
   };
   quantity?: string;
   next_condition_ids: string[];
-  // cliff_condition isn't part of the schema yet
-  cliff_length?: number;
 }
 
 export interface VestingCondition_VestingStart extends VestingConditionBase {
-  trigger: VestingConditionTrigger_VestingStart;
-}
-
-export interface VestingCondition_VestingScheduleRelative
-  extends VestingConditionBase {
-  trigger: VestingConditionTrigger_VestingScheduleRelative;
+  trigger: VestingStartTrigger;
 }
 
 export interface VestingCondition_VestingScheduleAbsolute
   extends VestingConditionBase {
-  trigger: VestingConditionTrigger_VestingScheduleAbsolute;
+  trigger: VestingAbsoluteTrigger;
+}
+
+export interface VestingCondition_VestingScheduleRelative
+  extends VestingConditionBase {
+  trigger: VestingRelativeTrigger;
 }
 
 export interface VestingCondition_VestingEvent extends VestingConditionBase {
-  trigger: VestingConditionTrigger_VestingEvent;
+  trigger: VestingEventTrigger;
+}
+
+export interface VestingCondition_VestingRelationshipEarlierOf
+  extends VestingConditionBase {
+  trigger: Earlier_Of_Trigger;
+}
+
+export interface VestingCondition_VestingRelationshipLaterOf
+  extends VestingConditionBase {
+  trigger: Later_Of_Trigger;
 }
 
 export type VestingCondition =
   | VestingCondition_VestingStart
   | VestingCondition_VestingScheduleAbsolute
   | VestingCondition_VestingScheduleRelative
-  | VestingCondition_VestingEvent;
+  | VestingCondition_VestingEvent
+  | VestingCondition_VestingRelationshipEarlierOf
+  | VestingCondition_VestingRelationshipLaterOf;
 
 /******************************
  * Vesting Terms
  ******************************/
+
+export type Allocation_Type =
+  | "CUMULATIVE_ROUNDING"
+  | "CUMULATIVE_ROUND_DOWN"
+  | "FRONT_LOADED"
+  | "BACK_LOADED"
+  | "FRONT_LOADED_TO_SINGLE_TRANCHE"
+  | "BACK_LOADED_TO_SINGLE_TRANCHE"
+  | "FRACTIONAL";
+
 export interface VestingTerms {
   id: string;
   comments?: string[];
   object_type: "VESTING_TERMS";
   name: string;
-  allocation_type:
-    | "CUMULATIVE_ROUNDING"
-    | "CUMULATIVE_ROUND_DOWN"
-    | "FRONT_LOADED"
-    | "BACK_LOADED"
-    | "FRONT_LOADED_TO_SINGLE_TRANCHE"
-    | "BACK_LOADED_TO_SINGLE_TRANCHE"
-    | "FRACTIONAL";
+  description: string;
+  allocation_type: Allocation_Type;
   vesting_conditions: VestingCondition[];
 }
 
@@ -155,6 +200,15 @@ export interface TX_Vesting_Start {
   id: string;
   comments?: string[];
   object_type: "TX_VESTING_START";
+  date: string;
+  security_id: string;
+  vesting_condition_id: string;
+}
+
+export interface TX_Vesting_Event {
+  id: string;
+  comments?: string[];
+  object_type: "TX_VESTING_EVENT";
   date: string;
   security_id: string;
   vesting_condition_id: string;
@@ -238,5 +292,69 @@ export interface TX_Equity_Compensation_Cancellation {
 export type Transaction =
   | TX_Equity_Compensation_Issuance
   | TX_Vesting_Start
+  | TX_Vesting_Event
   | TX_Equity_Compensation_Exercise
   | TX_Equity_Compensation_Cancellation;
+
+/******************************
+ * Vesting Graph
+ ******************************/
+
+export type GraphNode =
+  | StartGraphNode
+  | EventGraphNode
+  | AbsoluteGraphNode
+  | RelativeGraphNode
+  | EarlierOfGraphNode
+  | LaterOfGraphNode;
+
+export interface GraphNodeBase extends VestingConditionBase {
+  part_of_relationship?: boolean;
+  triggeredDate?: Date;
+  prior_condition_ids: string[];
+}
+
+export interface StartGraphNode extends GraphNodeBase {
+  trigger: VestingStartTrigger;
+}
+
+export interface EventGraphNode extends GraphNodeBase {
+  trigger: VestingEventTrigger;
+}
+
+export interface AbsoluteGraphNode extends GraphNodeBase {
+  trigger: VestingAbsoluteTrigger;
+}
+
+export interface RelativeGraphNode extends GraphNodeBase {
+  trigger: VestingRelativeTrigger;
+}
+
+export interface EarlierOfGraphNode extends GraphNodeBase {
+  trigger: Earlier_Of_Trigger;
+}
+
+export interface LaterOfGraphNode extends GraphNodeBase {
+  trigger: Later_Of_Trigger;
+}
+
+/******************************
+ * Vesting Installment
+ ******************************/
+
+export interface VestingInstallment {
+  date: Date;
+  quantity: number;
+}
+
+export interface PreProcessedVestingInstallment extends VestingInstallment {
+  relativeDate?: Date;
+  beforeCliff?: boolean;
+}
+
+export interface VestingScheduleStatus extends VestingInstallment {
+  becameVested: number;
+  totalVested: number;
+  totalUnvested: number;
+  becameExercisable: number;
+}
